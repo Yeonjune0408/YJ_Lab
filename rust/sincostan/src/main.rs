@@ -10,6 +10,7 @@ fn calculate_trig_values(angle_degrees: f64) -> (f64, f64, f64) {
 
 fn main() {
     let mut input = String::new();
+    io::stdin().read_line(&mut input).expect("Failed to read input");
     match io::stdin().read_line(&mut input) {
         Ok(_) => {
             let n: i64 = match input.trim().parse() {
@@ -39,7 +40,7 @@ fn main() {
                 360 => println!("sin: 0, cos: 1, tan: 0"),
                 _ => {
                     let (sin_value, cos_value, tan_value) = calculate_trig_values(n as f64);
-                    println!("sin: {:.4}, cos: {:.4}, tan: {:.4}", sin_value, cos_value, tan_value);
+                    println!("sin: {:.6}, cos: {:.6}, tan: {:.6}", sin_value, cos_value, tan_value);
                 }
             }
         }
