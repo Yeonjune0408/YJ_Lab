@@ -1,0 +1,25 @@
+{
+  "python-envs.defaultPackageManager": "ms-python.python:conda",
+  "python.languageServer": "Pylance",
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingModuleSource": "none"
+  },
+  "python.terminal.activateEnvironment": false,
+  "micropico.openOnStart": true,
+  "python.analysis.typeshedPaths": [
+    "~/.micropico-stubs/included"
+  ],
+  "python.analysis.extraPaths": [
+    "~/.micropico-stubs/included"
+  ],
+    "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/target/**": true,
+    "**/.venv/**": true,
+    "**/anaconda3/**": true,
+    "**/.conda/**": true
+  }
+}

@@ -1,0 +1,976 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "0fe14449-8ebd-4745-a907-1d8df54328cc")
+	(paper "A4")
+	(lib_symbols
+		(symbol "MyLib:5V_2A_Boost"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "5V_2A_Boost_0_1"
+				(rectangle
+					(start 0 0)
+					(end 17 -13)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "5V_2A_Boost_1_1"
+				(pin input line
+					(at -1.27 -11.43 0)
+					(length 2.54)
+					(name "Vin"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -1.27 -1.27 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 17.78 -11.43 180)
+					(length 2.54)
+					(name "Vout"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 17.78 -1.27 180)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "MyLib:TB6612FNG"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "MyLib:TB6612FNG"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "TB6612FNG_0_1"
+				(rectangle
+					(start 0 0)
+					(end 36 -26)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "TB6612FNG_1_1"
+				(pin input line
+					(at 36.83 -8.89 180)
+					(length 2.54)
+					(name "VM"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at 36.83 -13.97 180)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 5.08 -27.94 90)
+					(length 2.54)
+					(name "BOUT1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 13.97 -27.94 90)
+					(length 2.54)
+					(name "BOUT2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 24.13 -27.94 90)
+					(length 2.54)
+					(name "AOUT1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 31.75 -27.94 90)
+					(length 2.54)
+					(name "AOUT2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "MyLib:TP4056"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "MyLib:TP4056"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "TP4056_0_1"
+				(rectangle
+					(start 0 0)
+					(end 28 -17)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "TP4056_1_1"
+				(pin input line
+					(at -1.27 -2.54 0)
+					(length 2.54)
+					(name "IN+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -1.27 -15.24 0)
+					(length 2.54)
+					(name "IN-"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 29.21 -2.54 180)
+					(length 2.54)
+					(name "OUT+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 29.21 -15.24 180)
+					(length 2.54)
+					(name "OUT-"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 29.21 -5.08 180)
+					(length 2.54)
+					(name "B+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 29.21 -12.7 180)
+					(length 2.54)
+					(name "B-"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
+	(junction
+		(at 111.76 93.98)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "0fb4c6da-868c-4c55-979c-9a23e8cfb5af")
+	)
+	(junction
+		(at 111.76 78.74)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "3397a798-1c57-47f0-a5da-5f051904fb37")
+	)
+	(junction
+		(at 111.76 104.14)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "cd7f30e1-8dbc-4d60-9e94-2f2f151a0c9f")
+	)
+	(junction
+		(at 107.95 92.71)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e03f8584-0d53-4f33-a429-157d3236b0d6")
+	)
+	(junction
+		(at 111.76 92.71)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e184c550-f6f7-412c-b37d-64db227c4650")
+	)
+	(no_connect
+		(at 116.84 59.69)
+		(uuid "5814f854-1baa-4113-9ec1-a8401fe3583e")
+	)
+	(no_connect
+		(at 76.2 92.71)
+		(uuid "5f8fe996-fc9d-4690-8cbd-97b987de24af")
+	)
+	(no_connect
+		(at 130.81 104.14)
+		(uuid "6ebe5562-fa0e-41f2-b2d0-61f6706adef1")
+	)
+	(no_connect
+		(at 124.46 59.69)
+		(uuid "708440d6-9c6b-4d72-abe6-3de105b62eac")
+	)
+	(no_connect
+		(at 119.38 66.04)
+		(uuid "789d3a21-5dc1-4c1a-8bad-4a311b164edc")
+	)
+	(no_connect
+		(at 76.2 105.41)
+		(uuid "8577cc11-de9d-47ad-8ade-599e2f3463c4")
+	)
+	(no_connect
+		(at 143.51 59.69)
+		(uuid "8cd16402-9dbb-422c-adf7-3a82aa00826b")
+	)
+	(no_connect
+		(at 106.68 102.87)
+		(uuid "9752d3fa-3f06-4fe2-bdd8-1c4d572bde7b")
+	)
+	(no_connect
+		(at 130.81 93.98)
+		(uuid "d2c7d15d-3000-490b-a378-e1ca645442df")
+	)
+	(no_connect
+		(at 106.68 95.25)
+		(uuid "d995fe76-0d39-465e-be47-a753d429fecf")
+	)
+	(no_connect
+		(at 134.62 59.69)
+		(uuid "dd8d7b2e-00c5-493b-8e42-94cfbc6bf16f")
+	)
+	(wire
+		(pts
+			(xy 107.95 78.74) (xy 111.76 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "38fee71f-b6a9-4b28-840d-41686c906d3e")
+	)
+	(wire
+		(pts
+			(xy 106.68 104.14) (xy 106.68 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "615e7acc-1c80-4ced-b067-60b3abc19bc7")
+	)
+	(wire
+		(pts
+			(xy 106.68 92.71) (xy 107.95 92.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6d7b8f88-16c6-40fc-9f2f-dba44d58b0c3")
+	)
+	(wire
+		(pts
+			(xy 107.95 92.71) (xy 107.95 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9103ca82-63da-4c5b-ab7e-932d64dab5e4")
+	)
+	(wire
+		(pts
+			(xy 111.76 92.71) (xy 111.76 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9d218548-e407-4de7-97b2-1c912bc23368")
+	)
+	(wire
+		(pts
+			(xy 111.76 93.98) (xy 111.76 104.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a26b2a8e-4f72-486b-91cf-eb4a6932a227")
+	)
+	(wire
+		(pts
+			(xy 111.76 73.66) (xy 111.76 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "acee56ad-358e-4bd4-a3bf-1db982f7363c")
+	)
+	(wire
+		(pts
+			(xy 111.76 104.14) (xy 106.68 104.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c5889ed2-c2e8-412c-8a78-e04fa049aa32")
+	)
+	(wire
+		(pts
+			(xy 111.76 78.74) (xy 111.76 92.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d95051c9-a485-4646-aa62-25029a7d872a")
+	)
+	(wire
+		(pts
+			(xy 107.95 92.71) (xy 111.76 92.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ddac4194-2337-4e06-8625-029fd4dbfe71")
+	)
+	(symbol
+		(lib_id "MyLib:TB6612FNG")
+		(at 148.59 87.63 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "2bab8be5-57f8-4c83-b7d6-21dac0d48dd8")
+		(property "Reference" "U3"
+			(at 149.86 74.6299 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" ""
+			(at 148.59 87.63 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "MyLib:TB6612FNG"
+			(at 148.59 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 148.59 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 148.59 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "6"
+			(uuid "c8d3635f-85de-4a48-8ad6-fc5d4aa6d32a")
+		)
+		(pin "1"
+			(uuid "5edeedbc-f0bd-4414-901c-c91d615039c9")
+		)
+		(pin "2"
+			(uuid "300afaf4-8bd9-40f2-a5a4-8eb3f705988f")
+		)
+		(pin "4"
+			(uuid "8dca30f8-b791-46a0-99af-241ca5943814")
+		)
+		(pin "5"
+			(uuid "fe6dd609-a0e7-4bcc-b065-ac4606d4647e")
+		)
+		(pin "3"
+			(uuid "f375fdad-8e59-493d-9c4a-9f5ec88630bf")
+		)
+		(instances
+			(project "kicad_WheeledRobot"
+				(path "/0fe14449-8ebd-4745-a907-1d8df54328cc"
+					(reference "U3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "MyLib:TP4056")
+		(at 77.47 90.17 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "610d38df-4e1c-4056-8074-9f552622fd12")
+		(property "Reference" "U1"
+			(at 91.47 87.63 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" ""
+			(at 77.47 90.17 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "MyLib:TP4056"
+			(at 77.47 90.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 77.47 90.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 77.47 90.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "acc47c66-7727-48a9-9692-5656c0c186e7")
+		)
+		(pin "2"
+			(uuid "0700227f-17ba-4484-8cb1-17c297623979")
+		)
+		(pin "4"
+			(uuid "a9fb3bf5-c233-4bb3-8094-ee05f40962e5")
+		)
+		(pin "5"
+			(uuid "de15e80b-2fe2-4695-abe8-c2794a92c578")
+		)
+		(pin "3"
+			(uuid "f0168f21-7cd1-4f03-adfd-2fdf153cff82")
+		)
+		(pin "6"
+			(uuid "df063053-5874-42c4-b05d-0eef699ee4d9")
+		)
+		(instances
+			(project "kicad_WheeledRobot"
+				(path "/0fe14449-8ebd-4745-a907-1d8df54328cc"
+					(reference "U1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "MyLib:5V_2A_Boost")
+		(at 113.03 92.71 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "c63462ef-40d5-4452-a52c-0c1441a821c4")
+		(property "Reference" "U2"
+			(at 121.53 90.17 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" ""
+			(at 113.03 92.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "MyLib:5V 2A Boost"
+			(at 113.03 92.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 113.03 92.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 113.03 92.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "3"
+			(uuid "e334503f-2259-4333-bdac-7a44718ead43")
+		)
+		(pin "4"
+			(uuid "c390ce19-e5d9-45b9-a0bd-efd59b84e45a")
+		)
+		(pin "2"
+			(uuid "fbd9f714-17b1-40fb-a2ca-11c236b96571")
+		)
+		(pin "1"
+			(uuid "91186d9e-9c86-4b47-b4e0-32f79568627d")
+		)
+		(instances
+			(project "kicad_WheeledRobot"
+				(path "/0fe14449-8ebd-4745-a907-1d8df54328cc"
+					(reference "U2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
