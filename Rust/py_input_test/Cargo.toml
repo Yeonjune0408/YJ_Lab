@@ -1,0 +1,7 @@
+[package]
+name = "py_input_test"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+py_input = "0.1.0"
