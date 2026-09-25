@@ -49,13 +49,19 @@ fn main() {
                     360 => println!("sin: 0, cos: 1, tan: 0"),
                     _ => {
                         let (sin_value, cos_value, tan_value) = calculate_trig_values(n);
-                        println!("sin: {:.6}, cos: {:.6}, tan: {:.6}", sin_value, cos_value, tan_value);
+                        println!(
+                            "sin: {:.6}, cos: {:.6}, tan: {:.6}",
+                            sin_value, cos_value, tan_value
+                        );
                     }
                 }
             } else {
                 // 3. 만약 36.5도처럼 소수점이 살아있다면 바로 근사치 계산으로 보냅니다.
                 let (sin_value, cos_value, tan_value) = calculate_trig_values(n);
-                println!("sin: {:.6}, cos: {:.6}, tan: {:.6}", sin_value, cos_value, tan_value);
+                println!(
+                    "sin: {:.6}, cos: {:.6}, tan: {:.6}",
+                    sin_value, cos_value, tan_value
+                );
             }
         }
         Err(_) => {

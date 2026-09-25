@@ -1,7 +1,9 @@
 fn main() {
     let mut n = String::new();
     println!("Enter a number to factorize:");
-    std::io::stdin().read_line(&mut n).expect("Failed to read line");
+    std::io::stdin()
+        .read_line(&mut n)
+        .expect("Failed to read line");
     let n: u64 = n.trim().parse().expect("Please type a number!");
 
     factorize(n);
@@ -10,7 +12,7 @@ fn main() {
 fn factorize(mut n: u64) {
     let mut factors = std::collections::HashMap::new();
     let mut factor = 2;
-    
+
     while n > 1 {
         while n % factor == 0 {
             *factors.entry(factor).or_insert(0) += 1;
