@@ -1,0 +1,8 @@
+[package]
+name = "ez_input"
+version = "0.1.0"
+edition = "2024"
+description = "A tiny Rust crate for simple typed stdin input."
+license = "Apache-2.0"
+
+[dependencies]
