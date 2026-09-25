@@ -1,4 +1,4 @@
-# ez_input
+# py_input
 
 A tiny Rust crate for simple typed stdin input.
 
@@ -7,13 +7,13 @@ A tiny Rust crate for simple typed stdin input.
 Add the crate:
 
 ```bash
-cargo add ez_input
+cargo add py_input
 ```
 
 Then:
 
 ```rust
-use ez_input::input;
+use py_input::input;
 
 fn main() {
     let number: i32 = input();
@@ -56,6 +56,6 @@ let boolean: bool = input();
 
 ## Error handling
 
-In version `0.1`, `ez_input` uses `unwrap()` internally.
+In version `0.1`, `py_input` uses `unwrap()` internally.
 
 Invalid input or an I/O error will cause the program to panic.

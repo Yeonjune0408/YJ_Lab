@@ -10,8 +10,8 @@ use std::str::FromStr;
 ///
 /// # Example
 ///
-/// ```
-/// use ez_input::input;
+/// ```no_run
+/// use py_input::input;
 ///
 /// let number: i32 = input();
 /// println!("{number}");
