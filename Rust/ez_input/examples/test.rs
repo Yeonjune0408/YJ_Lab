@@ -1,4 +1,4 @@
-use ez_input::input;
+use py_input::input;
 fn main() {
     println!("Enter a number:");
     let number: i32 = input();

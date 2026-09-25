@@ -95,6 +95,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "py_input"
+version = "0.1.0"
+
+[[package]]
 name = "r-efi"
 version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -127,6 +131,10 @@ dependencies = [
 
 [[package]]
 name = "testit"
+version = "0.1.0"
+
+[[package]]
+name = "tests"
 version = "0.1.0"
 
 [[package]]

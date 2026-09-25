@@ -1,8 +1,9 @@
 [package]
-name = "ez_input"
+name = "py_input"
 version = "0.1.0"
 edition = "2024"
 description = "A tiny Rust crate for simple typed stdin input."
 license = "Apache-2.0"
+repository = "https://github.com/Yeonjune0408/YJ_Lab.git"
 
 [dependencies]
