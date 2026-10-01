@@ -22,7 +22,7 @@ where
     T::Err: std::fmt::Debug,
 {
     let mut input = String::new();
-
+    input.clear();
     io::stdin().read_line(&mut input).unwrap();
 
     input.trim().parse::<T>().unwrap()
