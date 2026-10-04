@@ -24,7 +24,7 @@ fn factorize(mut n: u64) {
     let mut result = String::new();
     for (factor, count) in factors {
         if !result.is_empty() {
-            result.push_str(" * ");
+            result.push_str(" * "); 
         }
         result.push_str(&format!("{}^{}", factor, count));
     }
