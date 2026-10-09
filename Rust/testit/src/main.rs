@@ -13,7 +13,7 @@ fn main() {
     println!("Enter the number");
     io::stdin()
         .read_line(&mut input)
-        .expect("입력을 읽지 못했습니다");
+        .expect("Failed to read line");
     let n = input.trim().parse::<u32>().expect("입력이 숫자가 아닙니다");
     println!("The {}th Fibonacci number is {}", n, fibonacci(n));
 }
