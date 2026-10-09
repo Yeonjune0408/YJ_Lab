@@ -7,9 +7,11 @@ fn main() {
     println!("{result:?}");
     let len_result=result.len();
     println!("{len_result}");
-    let mut x:i32=0;
+    let mut sum:i32=0;
     for i in result.iter() {
-        x+=i;
+        sum+=i;
     }
-    println!("{x}");
+    println!("{sum}");
+    let avg:f64=(sum as f64)/(len_result as f64);
+    println!("{avg}");
 }
