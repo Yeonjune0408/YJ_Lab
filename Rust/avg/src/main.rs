@@ -14,7 +14,11 @@ fn main() {
     }
     break;
     }
+    let min=result.iter().min().unwrap();
+    let max=result.iter().max().unwrap();
     let sum:i32=result.iter().sum();
     let avg:f64=(sum as f64)/(len_result as f64);
-    println!("{avg}");
+    println!("Average:{avg}");
+    println!("Minimum:{min}");
+    println!("Maximum:{max}");
 }
