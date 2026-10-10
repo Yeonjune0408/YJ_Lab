@@ -2,8 +2,8 @@ use std::io;
 
 fn led_calc(volt: f64, vf: f64, r: f64) -> f64 {
     let i = (volt - vf) / r;
-    let i = i * 1000.0;
-    i
+    
+    i * 1000.0
 }
 fn main() {
     let mut input = String::new();

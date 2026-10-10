@@ -1,20 +1,20 @@
 use std::io;
 
 fn cf(c: f64) -> f64 {
-    let f = (c * 9.0 / 5.0) + 32.0;
-    f
+    
+    (c * 9.0 / 5.0) + 32.0
 }
 fn fc(f: f64) -> f64 {
-    let c = (f - 32.0) * 5.0 / 9.0;
-    c
+    
+    (f - 32.0) * 5.0 / 9.0
 }
 fn deltacf(deltac: f64) -> f64 {
-    let deltaf = deltac * 9.0 / 5.0;
-    deltaf
+    
+    deltac * 9.0 / 5.0
 }
 fn deltafc(deltaf: f64) -> f64 {
-    let deltac = deltaf * 5.0 / 9.0;
-    deltac
+    
+    deltaf * 5.0 / 9.0
 }
 
 fn main() {
@@ -83,7 +83,6 @@ fn main() {
         if input.trim().to_lowercase() != "y" {
             println!("Exiting the program.");
             break;
-        } else {
-        }
+        } 
     }
 }

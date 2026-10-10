@@ -14,7 +14,7 @@ fn factorize(mut n: u64) {
     let mut factor = 2;
 
     while n > 1 {
-        while n % factor == 0 {
+        while n.is_multiple_of(factor) {
             *factors.entry(factor).or_insert(0) += 1;
             n /= factor;
         }
