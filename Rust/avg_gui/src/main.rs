@@ -61,7 +61,7 @@ impl NumberStatsApp {
             self.error_message = "Empty input.".to_string();
             return;
         }
-        let sum:i32= result.iter().map(|&x| x as i32).sum();
+        let sum:i32= result.iter().map(|&x| x).sum();
         self.avg = Some(sum as f64 / result.len() as f64);
         self.min = result.iter().copied().min();
         self.max = result.iter().copied().max();
