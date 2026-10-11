@@ -1,5 +1,4 @@
 use eframe::egui;
-use eframe::egui::Ui;
 #[derive(Default)]
 struct NumberStatsApp {
     input_text: String,
@@ -9,18 +8,29 @@ struct NumberStatsApp {
     min: Option<i32>,
 }
 impl eframe::App for NumberStatsApp {
-    // 1. eframe 0.36.2의 표준 update 시그니처입니다.
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
-        
-        // 2. 최신 규격: ctx를 인자로 넘겨 센트럴 패널을 생성하고, 
-        //    클로저 파이프 내부에는 간단하게 |ui|만 적어줍니다.
         egui::CentralPanel::default().show(ui, |ui| {
-            
-            // 3. 화면에 띄울 문구를 적어줍니다.
+            ui.heading("Statistics Calculator");
             ui.label("Enter numbers separated by spaces:");
-            
-        }); // ⚠️ 괄호 매칭이 완벽히 닫혀야 update 메서드 전체의 빨간 줄이 사라집니다.
+            ui.text_edit_singleline(&mut self.input_text);
+            if ui.button("Calculate").clicked() {
+                self.calculate();
+            }
+            if !self.error_message.is_empty() {
+                ui.colored_label(egui::Color32::RED, &self.error_message);
+            }
+            if let Some(avg) = self.avg {
+                ui.label(format!("Average: {:.2}", avg));
+            }
+            if let Some(min) = self.min {
+                ui.label(format!("Minimum: {}", min));
+            }
+            if let Some(max) = self.max {
+                ui.label(format!("Maximum: {}", max));
+            }
+        });
     }
+    
 }
 
 
