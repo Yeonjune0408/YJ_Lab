@@ -6,6 +6,7 @@ struct NumberStatsApp {
     avg: Option<f64>,
     max: Option<i32>,
     min: Option<i32>,
+    sum: Option<i32>,
 }
 impl eframe::App for NumberStatsApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
@@ -28,6 +29,9 @@ impl eframe::App for NumberStatsApp {
             if let Some(max) = self.max {
                 ui.label(format!("Maximum: {}", max));
             }
+            if let Some(sum)=self.sum {
+                ui.label(format!("Sum: {}", sum));
+            }
         });
     }
     
@@ -40,7 +44,7 @@ impl NumberStatsApp {
         self.avg = None;
         self.max = None;
         self.min = None;
-
+        self.sum = None;
         let result: Result<Vec<i32>, _> = self
             .input_text
             .split_whitespace()
@@ -57,10 +61,11 @@ impl NumberStatsApp {
             self.error_message = "Empty input.".to_string();
             return;
         }
-        let sum:i64= result.iter().map(|&x| x as i64).sum();
+        let sum:i32= result.iter().map(|&x| x as i32).sum();
         self.avg = Some(sum as f64 / result.len() as f64);
         self.min = result.iter().copied().min();
         self.max = result.iter().copied().max();
+        self.sum = Some(result.iter().sum());
     }
 }
 
