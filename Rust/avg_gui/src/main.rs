@@ -1,6 +1,6 @@
 use eframe::egui;
 use eframe::egui::Ui;
-
+#[derive(Default)]
 struct NumberStatsApp {
     input_text: String,
     error_message: String,
@@ -25,14 +25,32 @@ impl eframe::App for NumberStatsApp {
 
 
 impl NumberStatsApp {
-    fn default() -> Self {
-        Self {
-            input_text: String::new(),
-            error_message: String::new(),
-            avg: None,
-            max: None,
-            min: None,
+    fn calculate(&mut self) {
+        self.error_message.clear();
+        self.avg = None;
+        self.max = None;
+        self.min = None;
+
+        let result: Result<Vec<i32>, _> = self
+            .input_text
+            .split_whitespace()
+            .map(|s| s.parse::<i32>())
+            .collect();
+        let result=match result {
+            Ok(v) => v,
+            Err(_) => {
+                self.error_message = "Invalid input. Please enter valid numbers.".to_string();
+                return;
+            }
+        };
+        if result.is_empty() {
+            self.error_message = "Empty input.".to_string();
+            return;
         }
+        let sum:i64= result.iter().map(|&x| x as i64).sum();
+        self.avg = Some(sum as f64 / result.len() as f64);
+        self.min = result.iter().copied().min();
+        self.max = result.iter().copied().max();
     }
 }
 
