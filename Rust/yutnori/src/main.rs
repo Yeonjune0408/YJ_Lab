@@ -27,7 +27,7 @@ fn main() {
         _ => println!("Invalid result"),
     }
     for i in yut_result.iter() {
-        print!("{} ", i);
+        print!("Yut Result:{},", i);
         io::stdout().flush().unwrap();
     }
 }
