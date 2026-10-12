@@ -1,4 +1,5 @@
 use rand::RngExt;
+use std::io::{self, Write};
 fn main() {
     let mut yut_result: Vec<i32> = vec![];
     println!("0=Flat Side, 1=Round Side");
@@ -24,5 +25,9 @@ fn main() {
         3 => println!("Result: Geol"),
         4 => println!("Result: Yut"),
         _ => println!("Invalid result"),
+    }
+    for i in yut_result.iter() {
+        print!("{} ", i);
+        io::stdout().flush().unwrap();
     }
 }
