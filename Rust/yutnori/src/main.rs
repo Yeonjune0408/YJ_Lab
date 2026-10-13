@@ -22,10 +22,9 @@ fn main() {
         _ => println!("Invalid result"),
     }
     print!("Yut Results: ");
-    io::stdout().flush().unwrap();
     for i in yut_result.iter() {
         print!("{},", i);
-        io::stdout().flush().unwrap();
     }
+    io::stdout().flush().unwrap();
     println!();
 }
