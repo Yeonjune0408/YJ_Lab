@@ -2,7 +2,7 @@ use rand::RngExt;
 use std::io::{self, Write};
 fn main() {
     let mut yut_result: Vec<i32> = vec![];
-    println!("0=Flat Side, 1=Round Side");
+    println!("1=Flat Side up, 0=Round Side up");
     let mut rng = rand::rng();
     let yut_1 = rng.random_range(0..=1);
     yut_result.push(yut_1);
