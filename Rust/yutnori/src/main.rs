@@ -13,12 +13,12 @@ fn main() {
     let yut_4 = rng.random_range(0..=1);
     yut_result.push(yut_4);
     let mut sum: i32 = yut_result.iter().sum();
-    if sum==-1 {
+    if sum == -1 {
         println!("Result: Back Do");
-        println!("{},{},{},{}",yut_1,yut_2,yut_3,yut_4);
+        println!("{},{},{},{}", yut_1, yut_2, yut_3, yut_4);
         return;
     } else if yut_result.contains(&-1) {
-        sum+=2;
+        sum += 2;
     }
     match sum {
         0 => println!("Result: Mo"),
@@ -29,7 +29,7 @@ fn main() {
         _ => println!("Invalid result"),
     }
     print!("Yut Results: ");
-    print!("{},{},{},{}",yut_1,yut_2,yut_3,yut_4);
+    print!("{},{},{},{}", yut_1, yut_2, yut_3, yut_4);
     io::stdout().flush().unwrap();
     println!();
 }

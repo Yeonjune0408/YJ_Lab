@@ -1,4 +1,4 @@
-use rand::RngExt; 
+use rand::RngExt;
 pub struct YutResult {
     pub yut_result: Vec<i32>,
     pub sum: i32,
@@ -16,14 +16,14 @@ pub fn yutroll() -> YutResult {
     let yut_4 = rng.random_range(0..=1);
     yut_result.push(yut_4);
     let mut sum: i32 = yut_result.iter().sum();
-    if sum==-1 {
+    if sum == -1 {
         YutResult {
             yut_result,
             sum,
             result: "Back Do".to_string(),
         }
     } else if yut_result.contains(&-1) {
-        sum+=2;
+        sum += 2;
         match sum {
             0 => YutResult {
                 yut_result,
@@ -99,8 +99,8 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let res=yutroll();
+        let res = yutroll();
         println!("Yut Results: {:?}", res.yut_result);
-        println!("Score:{}",res.result);
+        println!("Score:{}", res.result);
     }
 }
