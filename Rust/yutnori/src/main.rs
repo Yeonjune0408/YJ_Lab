@@ -4,7 +4,7 @@ fn main() {
     let mut yut_result: Vec<i32> = vec![];
     println!("1=Flat Side up, 0=Round Side up, -1=Flat Side with a special mark (Back Do) up");
     let mut rng = rand::rng();
-    let yut_1 = rng.random_range(-1..=1);
+    let yut_1 = rng.random_range(-1..=0);
     yut_result.push(yut_1);
     let yut_2 = rng.random_range(0..=1);
     yut_result.push(yut_2);
