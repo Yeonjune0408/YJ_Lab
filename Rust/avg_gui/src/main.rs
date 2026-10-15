@@ -7,6 +7,7 @@ struct NumberStatsApp {
     max: Option<i32>,
     min: Option<i32>,
     sum: Option<i32>,
+    med: Option<f64>,
 }
 impl eframe::App for NumberStatsApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
@@ -31,6 +32,9 @@ impl eframe::App for NumberStatsApp {
             }
             if let Some(sum)=self.sum {
                 ui.label(format!("Sum: {}", sum));
+            }
+            if let Some(med) = self.med {
+                ui.label(format!("Median: {}", med));
             }
         });
     }
@@ -66,6 +70,13 @@ impl NumberStatsApp {
         self.min = result.iter().copied().min();
         self.max = result.iter().copied().max();
         self.sum = Some(result.iter().sum());
+        self.med=Some (if result.len() % 2 == 0 {
+            let mid1 = result[result.len() / 2 - 1] as f64;
+            let mid2 = result[result.len() / 2] as f64;
+            (mid1 + mid2) / 2.0
+        } else {
+            result[result.len() / 2].into()
+        });
     }
 }
 
