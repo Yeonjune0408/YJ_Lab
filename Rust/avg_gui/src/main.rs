@@ -30,7 +30,7 @@ impl eframe::App for NumberStatsApp {
             if let Some(max) = self.max {
                 ui.label(format!("Maximum: {}", max));
             }
-            if let Some(sum)=self.sum {
+            if let Some(sum) = self.sum {
                 ui.label(format!("Sum: {}", sum));
             }
             if let Some(med) = self.med {
@@ -38,9 +38,7 @@ impl eframe::App for NumberStatsApp {
             }
         });
     }
-    
 }
-
 
 impl NumberStatsApp {
     fn calculate(&mut self) {
@@ -54,7 +52,7 @@ impl NumberStatsApp {
             .split_whitespace()
             .map(|s| s.parse::<i32>())
             .collect();
-        let result=match result {
+        let result = match result {
             Ok(v) => v,
             Err(_) => {
                 self.error_message = "Invalid input. Please enter valid numbers.".to_string();
@@ -65,12 +63,12 @@ impl NumberStatsApp {
             self.error_message = "Empty input.".to_string();
             return;
         }
-        let sum:i32= result.iter().copied().sum();
+        let sum: i32 = result.iter().copied().sum();
         self.avg = Some(sum as f64 / result.len() as f64);
         self.min = result.iter().copied().min();
         self.max = result.iter().copied().max();
         self.sum = Some(result.iter().sum());
-        self.med=Some (if result.len() % 2 == 0 {
+        self.med = Some(if result.len() % 2 == 0 {
             let mid1 = result[result.len() / 2 - 1] as f64;
             let mid2 = result[result.len() / 2] as f64;
             (mid1 + mid2) / 2.0
@@ -80,16 +78,16 @@ impl NumberStatsApp {
     }
 }
 
-fn main () ->eframe::Result<(), eframe::Error> {
+fn main() -> eframe::Result<(), eframe::Error> {
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_title("Statistics Calculator")
             .with_inner_size(egui::vec2(400.0, 300.0)),
-            ..Default::default()
+        ..Default::default()
     };
     eframe::run_native(
         "Statistics Calculator",
         options,
-        Box::new(|_cc| Ok(Box::new(NumberStatsApp::default())))
+        Box::new(|_cc| Ok(Box::new(NumberStatsApp::default()))),
     )
 }
