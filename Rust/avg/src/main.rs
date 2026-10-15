@@ -23,7 +23,7 @@ fn main() {
     let min = result.iter().min().unwrap();
     let max = result.iter().max().unwrap();
     let sum: i32 = result.iter().sum();
-    let med:f64={
+    let med: f64 = {
         if len_result % 2 == 0 {
             let mid1 = result[len_result / 2 - 1] as f64;
             let mid2 = result[len_result / 2] as f64;
