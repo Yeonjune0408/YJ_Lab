@@ -36,5 +36,6 @@ fn main() {
     println!("Average:{avg}");
     println!("Minimum:{min}");
     println!("Maximum:{max}");
+    println!("Sum:{sum}");
     println!("Median:{med}");
 }
