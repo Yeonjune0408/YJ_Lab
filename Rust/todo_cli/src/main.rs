@@ -68,8 +68,30 @@ fn main() {
             println!("  clear        Clear all todos (Confirmation required)");
             println!("  help         Show this help message");
         }
+        "done" => {
+            if args.len() < 3 {
+                println!("expected todo id, found nothing");
+                return;
+            }
+            let id: u64 = match args[2].parse() {
+                Ok(id) => id,
+                Err(_) => {
+                    println!("expected todo id, found nothing");
+                    return;
+                }
+            };
+            match todos.iter_mut().find(|todo| todo.id == id) {
+                Some(todo) => {
+                    todo.completed = true;
+                    save_todos(&todos);
+                    println!("Todo marked as done");
+                }
+                None => {
+                    println!("Todo not found")
+                }
+            }
+        }
         "clear" => {
-            println!("clear command detected");
             print!("Are you sure you want to clear all your todo list? (y/N)");
             io::stdout().flush().unwrap();
             io::stdin().read_line(&mut input).unwrap();
