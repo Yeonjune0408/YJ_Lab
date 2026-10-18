@@ -27,6 +27,6 @@ fn main() {
     todos.push(todo_2);
     let json = serde_json::to_string_pretty(&todos).unwrap();
     println!("{}", json);
-    let restored_todos: Vec<Todo> = serde_json::from_str::<Vec<Todo>>(&json).unwrap();
+    let restored_todos: Vec<Todo> = serde_json::from_str(&json).unwrap();
     println!("{:#?}", restored_todos);
 }
