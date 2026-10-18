@@ -3138,6 +3138,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "todo_cli"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "tokio"
 version = "1.53.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
