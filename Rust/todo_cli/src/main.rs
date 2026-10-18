@@ -63,13 +63,14 @@ fn main() {
         "help" => {
             println!("Usage: todo <command> [arguments]");
             println!("Commands:");
-            println!("  add <title>  Add a new todo");
-            println!("  list         List all todos");
-            println!("  done <id>    Mark a todo as completed");
-            println!("  undone <id>  Mark a todo as not completed");
-            println!("  remove <id>  Remove a todo  ");
-            println!("  clear        Clear all todos (Confirmation required)");
-            println!("  help         Show this help message");
+            println!("  add <title>            Add a new todo");
+            println!("  list                   List all todos");
+            println!("  done <id>              Mark a todo as completed");
+            println!("  undone <id>            Mark a todo as not completed");
+            println!("  remove <id>            Remove a todo  ");
+            println!("  edit <id> <new title>  Edit a todo title");
+            println!("  clear                  Clear all todos (Confirmation required)");
+            println!("  help                   Show this help message");
         }
         "done" => {
             if args.len() < 3 {
