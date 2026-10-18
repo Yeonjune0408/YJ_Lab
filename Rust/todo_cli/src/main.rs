@@ -1,10 +1,9 @@
 use serde::{Deserialize, Serialize};
-use std::fs;
-use std::io::ErrorKind;
 use std::env::args;
-use std::io::Write;
+use std::fs;
 use std::io;
-
+use std::io::ErrorKind;
+use std::io::Write;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Todo {
@@ -12,11 +11,9 @@ struct Todo {
     title: String,
     completed: bool,
 }
-fn load_todos()->Vec<Todo> {
+fn load_todos() -> Vec<Todo> {
     match fs::read_to_string("todos.json") {
-        Ok(content)=> {
-            serde_json::from_str::<Vec<Todo>>(&content).unwrap()
-        },
+        Ok(content) => serde_json::from_str::<Vec<Todo>>(&content).unwrap(),
         Err(error) => {
             if error.kind() == ErrorKind::NotFound {
                 println!("No file found, starting with an emty list...");
@@ -28,39 +25,48 @@ fn load_todos()->Vec<Todo> {
     }
 }
 
-fn save_todos(todos:&[Todo]) {
-    let json=serde_json::to_string_pretty(todos).unwrap();
+fn save_todos(todos: &[Todo]) {
+    let json = serde_json::to_string_pretty(todos).unwrap();
     fs::write("todos.json", json).expect("Failed to write todo file")
 }
 
 fn main() {
-    let mut input=String::new();
-    let args:Vec<String>=args().collect();
-    let mut todos=load_todos();
-    if args.len()<2{
+    let mut input = String::new();
+    let args: Vec<String> = args().collect();
+    let mut todos = load_todos();
+    if args.len() < 2 {
         println!("Usage: todo <command>");
+        println!("Try \"todo help\" for more information.");
         return;
     }
     match args[1].as_str() {
-        "add"=> {
-            if args.len()<3 {
+        "add" => {
+            if args.len() < 3 {
                 println!("Expected todo title, found nothing");
                 return;
             }
-            let title=args[2].clone();
-            let next_id=todos.iter().map(|todo| todo.id).max().unwrap_or(0)+1;
-            let todo_new=Todo {
-                id:next_id,
+            let title = args[2].clone();
+            let next_id = todos.iter().map(|todo| todo.id).max().unwrap_or(0) + 1;
+            let todo_new = Todo {
+                id: next_id,
                 title,
-                completed:false,
+                completed: false,
             };
             todos.push(todo_new);
             save_todos(&todos);
         }
-        "list"=> {
+        "list" => {
             for todo in todos.iter() {
                 println!("{todo:#?}");
             }
+        }
+        "help" => {
+            println!("Usage: todo <command> [arguments]");
+            println!("Commands:");
+            println!("  add <title>  Add a new todo");
+            println!("  list         List all todos");
+            println!("  clear        Clear all todos");
+            println!("  help         Show this help message");
         }
         "clear" => {
             println!("clear command detected");
@@ -75,7 +81,7 @@ fn main() {
                 println!("Clear cancelled");
             }
         }
-        _=> {
+        _ => {
             println!("Invalid command");
         }
     }
