@@ -1,18 +1,20 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::ErrorKind;
+use std::env::args;
+
 #[derive(Serialize, Deserialize, Debug)]
 struct Todo {
     id: u64,
     title: String,
     completed: bool,
 }
-fn load_todos() -> Vec<Todo> {
+fn load_todos()->Vec<Todo> {
     match fs::read_to_string("todos.json") {
-        Ok(content) => {
+        Ok(content)=> {
             println!("pulling the data");
             serde_json::from_str::<Vec<Todo>>(&content).unwrap()
-        }
+        },
         Err(error) => {
             if error.kind() == ErrorKind::NotFound {
                 println!("No file found, starting with an emty list...");
@@ -24,12 +26,29 @@ fn load_todos() -> Vec<Todo> {
     }
 }
 
-fn save_todos(todos: &[Todo]) {
-    let json = serde_json::to_string_pretty(todos).unwrap();
+fn _save_todos(todos:&[Todo]) {
+    let json=serde_json::to_string_pretty(todos).unwrap();
     fs::write("todos.json", json).expect("Failed to write todo file")
 }
 
 fn main() {
-    let mut todos = load_todos();
+    let args:Vec<String>=args().collect();
+    let mut todos=load_todos();
+    println!("{args:#?}");
     println!("{todos:#?}");
+    if args.len()<2{
+        println!("Usage: todo <command>");
+        return;
+    }
+    match args[1].as_str() {
+        "add"=> {
+            println!("command: add");
+        }
+        "list"=> {
+            println!("command: list");
+        }
+        _=> {
+            println!("Invalid command");
+        }
+    }
 }
