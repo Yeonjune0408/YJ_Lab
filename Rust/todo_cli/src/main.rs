@@ -45,7 +45,9 @@ fn main() {
             println!("command: add");
         }
         "list"=> {
-            println!("command: list");
+            for todo in todos.iter() {
+                println!("{todo:#?}");
+            }
         }
         _=> {
             println!("Invalid command");
