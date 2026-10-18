@@ -109,7 +109,7 @@ fn main() {
                 Some(todo) => {
                     todo.completed = false;
                     save_todos(&todos);
-                    println!("Todo marked as done");
+                    println!("Todo marked as undone");
                 }
                 None => {
                     println!("Todo not found")
