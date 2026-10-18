@@ -2,6 +2,9 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::ErrorKind;
 use std::env::args;
+use std::io::Write;
+use std::io;
+
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Todo {
@@ -31,6 +34,7 @@ fn save_todos(todos:&[Todo]) {
 }
 
 fn main() {
+    let mut input=String::new();
     let args:Vec<String>=args().collect();
     let mut todos=load_todos();
     if args.len()<2{
@@ -60,6 +64,16 @@ fn main() {
         }
         "clear" => {
             println!("clear command detected");
+            print!("Are you sure you want to clear all your todo list? (y/N)");
+            io::stdout().flush().unwrap();
+            io::stdin().read_line(&mut input).unwrap();
+            if input.trim().to_lowercase().eq("y") {
+                todos.clear();
+                save_todos(&todos);
+                println!("All todo list cleared");
+            } else {
+                println!("Clear cancelled");
+            }
         }
         _=> {
             println!("Invalid command");
