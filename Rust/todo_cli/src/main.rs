@@ -42,7 +42,18 @@ fn main() {
     }
     match args[1].as_str() {
         "add"=> {
-            println!("command: add");
+            if args.len()<3 {
+                println!("Expected todo title, found nothing");
+                return;
+            }
+            let title=args[2].clone();
+            let next_id=todos.iter().map(|todo| todo.id).max().unwrap_or(0)+1;
+            let todo_new=Todo {
+                id:next_id,
+                title,
+                completed:false,
+            };
+            todos.push(todo_new);
         }
         "list"=> {
             for todo in todos.iter() {
