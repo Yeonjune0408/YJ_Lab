@@ -117,26 +117,50 @@ fn main() {
                 }
             }
         }
-        "remove"=>{
+        "remove" => {
             if args.len() < 3 {
                 println!("expected todo id, found nothing");
                 return;
             }
-            let id:u64=match args[2].parse() {
-                Ok(id)=>id,
-                Err(_)=> {
+            let id: u64 = match args[2].parse() {
+                Ok(id) => id,
+                Err(_) => {
                     println!("Invalid todo id");
                     return;
                 }
             };
-            let len_bf=todos.len();
-            todos.retain(|todo| todo.id!=id);
-            if len_bf==todos.len(){
+            let len_bf = todos.len();
+            todos.retain(|todo| todo.id != id);
+            if len_bf == todos.len() {
                 println!("Todo not found");
                 return;
             }
             save_todos(&todos);
             println!("Todo removed");
+        }
+        "edit" => {
+            if args.len() < 4 {
+                println!("usage: todo edit <id> <new title>");
+                return;
+            }
+            let id: u64 = match args[2].parse() {
+                Ok(id) => id,
+                Err(_) => {
+                    println!("expected todo id, found nothing");
+                    return;
+                }
+            };
+            let title_new = args[3].clone();
+            match todos.iter_mut().find(|todo| todo.id == id) {
+                Some(todo) => {
+                    todo.title = title_new;
+                    save_todos(&todos);
+                    println!("Todo title updated");
+                }
+                None => {
+                    println!("Todo not found")
+                }
+            }
         }
         "clear" => {
             print!("Are you sure you want to clear all your todo list? (y/N)");
