@@ -24,6 +24,10 @@ fn load_todos()->Vec<Todo> {
     }
 }
 
+fn save_todos(todos:&[Todo]) {
+    let json=serde_json::to_string_pretty(todos).unwrap();
+    fs::write("todos.json", json).expect("Failed to write todo file")
+}
 
 fn main() {
     let mut todos=load_todos();
