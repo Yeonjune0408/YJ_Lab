@@ -19,9 +19,9 @@ fn main() {
     let restored_todo: Todo = serde_json::from_str::<Todo>(&json).unwrap();
     println!("{:#?}", restored_todo);
     todos.push(todo);
-    let todo_2=Todo {
-        id:2,
-        title: String::from ("learning serde"),
+    let todo_2 = Todo {
+        id: 2,
+        title: String::from("learning serde"),
         completed: true,
     };
     todos.push(todo_2);
