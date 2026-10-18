@@ -7,12 +7,12 @@ struct Todo {
     title: String,
     completed: bool,
 }
-fn load_todos()->Vec<Todo> {
+fn load_todos() -> Vec<Todo> {
     match fs::read_to_string("todos.json") {
-        Ok(content)=> {
+        Ok(content) => {
             println!("pulling the data");
             serde_json::from_str::<Vec<Todo>>(&content).unwrap()
-        },
+        }
         Err(error) => {
             if error.kind() == ErrorKind::NotFound {
                 println!("No file found, starting with an emty list...");
@@ -24,12 +24,12 @@ fn load_todos()->Vec<Todo> {
     }
 }
 
-fn save_todos(todos:&[Todo]) {
-    let json=serde_json::to_string_pretty(todos).unwrap();
+fn save_todos(todos: &[Todo]) {
+    let json = serde_json::to_string_pretty(todos).unwrap();
     fs::write("todos.json", json).expect("Failed to write todo file")
 }
 
 fn main() {
-    let mut todos=load_todos();
+    let mut todos = load_todos();
     println!("{todos:#?}");
 }
