@@ -65,7 +65,7 @@ fn main() {
             println!("Commands:");
             println!("  add <title>  Add a new todo");
             println!("  list         List all todos");
-            println!("  clear        Clear all todos");
+            println!("  clear        Clear all todos (Confirmation required)");
             println!("  help         Show this help message");
         }
         "clear" => {
