@@ -12,7 +12,6 @@ struct Todo {
 fn load_todos()->Vec<Todo> {
     match fs::read_to_string("todos.json") {
         Ok(content)=> {
-            println!("pulling the data");
             serde_json::from_str::<Vec<Todo>>(&content).unwrap()
         },
         Err(error) => {
