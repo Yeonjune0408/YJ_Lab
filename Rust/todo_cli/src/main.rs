@@ -66,6 +66,7 @@ fn main() {
             println!("  add <title>  Add a new todo");
             println!("  list         List all todos");
             println!("  done <id>    Mark a todo as completed");
+            println!("  undone <id<  Mark a todo as not completed");
             println!("  clear        Clear all todos (Confirmation required)"); 
             println!("  help         Show this help message");
         }
@@ -84,6 +85,29 @@ fn main() {
             match todos.iter_mut().find(|todo| todo.id == id) {
                 Some(todo) => {
                     todo.completed = true;
+                    save_todos(&todos);
+                    println!("Todo marked as done");
+                }
+                None => {
+                    println!("Todo not found")
+                }
+            }
+        }
+        "undone" => {
+            if args.len() < 3 {
+                println!("expected todo id, found nothing");
+                return;
+            }
+            let id: u64 = match args[2].parse() {
+                Ok(id) => id,
+                Err(_) => {
+                    println!("expected todo id, found nothing");
+                    return;
+                }
+            };
+            match todos.iter_mut().find(|todo| todo.id == id) {
+                Some(todo) => {
+                    todo.completed = false;
                     save_todos(&todos);
                     println!("Todo marked as done");
                 }
