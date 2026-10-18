@@ -66,8 +66,9 @@ fn main() {
             println!("  add <title>  Add a new todo");
             println!("  list         List all todos");
             println!("  done <id>    Mark a todo as completed");
-            println!("  undone <id<  Mark a todo as not completed");
-            println!("  clear        Clear all todos (Confirmation required)"); 
+            println!("  undone <id>  Mark a todo as not completed");
+            println!("  remove <id>  Remove a todo  ");
+            println!("  clear        Clear all todos (Confirmation required)");
             println!("  help         Show this help message");
         }
         "done" => {
@@ -122,7 +123,7 @@ fn main() {
                 return;
             }
             let id:u64=match args[2].parse() {
-                Ok(id)=>id, 
+                Ok(id)=>id,
                 Err(_)=> {
                     println!("Invalid todo id");
                     return;
