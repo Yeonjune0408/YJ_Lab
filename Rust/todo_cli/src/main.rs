@@ -57,7 +57,8 @@ fn main() {
         }
         "list" => {
             for todo in todos.iter() {
-                println!("{todo:#?}");
+                let status = if todo.completed { "[✓]" } else { "[ ]" };
+                println!("{} {}  {}", status, todo.id, todo.title);
             }
         }
         "help" => {
