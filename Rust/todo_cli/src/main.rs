@@ -26,7 +26,7 @@ fn load_todos()->Vec<Todo> {
     }
 }
 
-fn _save_todos(todos:&[Todo]) {
+fn save_todos(todos:&[Todo]) {
     let json=serde_json::to_string_pretty(todos).unwrap();
     fs::write("todos.json", json).expect("Failed to write todo file")
 }
@@ -54,6 +54,7 @@ fn main() {
                 completed:false,
             };
             todos.push(todo_new);
+            save_todos(&todos);
         }
         "list"=> {
             for todo in todos.iter() {
