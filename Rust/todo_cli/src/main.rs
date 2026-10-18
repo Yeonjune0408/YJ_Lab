@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 struct Todo {
     id: u64,
     title: String,
@@ -16,4 +16,6 @@ fn main() {
     };
     let json = serde_json::to_string_pretty(&todo).unwrap();
     println!("{}", json);
+    let restored_todo: Todo = serde_json::from_str::<Todo>(&json).unwrap();
+    println!("{:?}", restored_todo);
 }
