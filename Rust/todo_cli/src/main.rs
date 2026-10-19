@@ -69,6 +69,7 @@ fn main() {
             println!("  done <id>                  Mark a todo as completed");
             println!("  undone <id>                Mark a todo as not completed");
             println!("  remove <id>                Remove a todo  ");
+            println!("  rm <id>                    Remove a todo  ");
             println!("  edit <id> \"<new title>\"  Edit a todo title");
             println!("  clear                      Clear all todos (Confirmation required)");
             println!("  help                       Show this help message");
@@ -119,7 +120,7 @@ fn main() {
                 }
             }
         }
-        "remove" => {
+        "rm" => {
             if args.len() < 3 {
                 println!("expected todo id, found nothing");
                 return;
