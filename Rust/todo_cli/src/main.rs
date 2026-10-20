@@ -13,11 +13,20 @@ struct Todo {
     completed: bool,
 }
 
-fn get_data_path()->PathBuf {
-    let home=std::env::var_os("HOME").expect("HOME environment variable is not set");
-    PathBuf::from(home).join(".local").join("share").join("todo_cli").join("todos.json")
+fn get_data_path() -> PathBuf {
+    if let Some(xdg_home) = std::env::var_os("XDG_DATA_HOME") {
+        let path = PathBuf::from(xdg_home);
+        if path.is_absolute() {
+            return path.join("todo_cli").join("todos.json");
+        }
+    }
+    let home = std::env::var_os("HOME").expect("HOME environment variable is not set");
+    PathBuf::from(home)
+        .join(".local")
+        .join("share")
+        .join("todo_cli")
+        .join("todos.json")
 }
-
 
 fn load_todos() -> Vec<Todo> {
     match fs::read_to_string(get_data_path()) {
@@ -34,11 +43,11 @@ fn load_todos() -> Vec<Todo> {
 }
 
 fn save_todos(todos: &[Todo]) {
-    let path=get_data_path();
-    if let Some(parent)=path.parent() {
+    let path = get_data_path();
+    if let Some(parent) = path.parent() {
         fs::create_dir_all(parent).expect("Failed to create directory");
     }
-    let json=serde_json::to_string_pretty(todos).unwrap();
+    let json = serde_json::to_string_pretty(todos).unwrap();
     fs::write(path, json).expect("Failed to write todo file");
 }
 
