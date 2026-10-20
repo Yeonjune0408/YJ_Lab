@@ -4,6 +4,7 @@ use std::fs;
 use std::io;
 use std::io::ErrorKind;
 use std::io::Write;
+use std::path::PathBuf;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Todo {
@@ -11,8 +12,15 @@ struct Todo {
     title: String,
     completed: bool,
 }
+
+fn get_data_path()->PathBuf {
+    let home=std::env::var_os("HOME").expect("HOME environment variable is not set");
+    PathBuf::from(home).join(".local").join("share").join("todo_cli").join("todos.json")
+}
+
+
 fn load_todos() -> Vec<Todo> {
-    match fs::read_to_string("todos.json") {
+    match fs::read_to_string(get_data_path()) {
         Ok(content) => serde_json::from_str::<Vec<Todo>>(&content).unwrap(),
         Err(error) => {
             if error.kind() == ErrorKind::NotFound {
@@ -26,8 +34,12 @@ fn load_todos() -> Vec<Todo> {
 }
 
 fn save_todos(todos: &[Todo]) {
-    let json = serde_json::to_string_pretty(todos).unwrap();
-    fs::write("todos.json", json).expect("Failed to write todo file")
+    let path=get_data_path();
+    if let Some(parent)=path.parent() {
+        fs::create_dir_all(parent).expect("Failed to create directory");
+    }
+    let json=serde_json::to_string_pretty(todos).unwrap();
+    fs::write(path, json).expect("Failed to write todo file");
 }
 
 fn main() {
