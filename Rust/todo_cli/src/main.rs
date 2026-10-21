@@ -186,6 +186,16 @@ fn main() {
                 }
             }
         }
+        "stats" => {
+            let total = todos.len();
+            let completed = todos.iter().filter(|todo| todo.completed).count();
+            let pending = total - completed;
+            println!("Todo Statistics");
+            println!("---------------");
+            println!("Total:      {total}");
+            println!("Completed:  {completed}");
+            println!("Pending:    {pending}");
+        }
         "clear" => {
             print!("Are you sure you want to clear all your todo list? (y/N)");
             io::stdout().flush().unwrap();
