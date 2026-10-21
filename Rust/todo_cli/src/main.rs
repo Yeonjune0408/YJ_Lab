@@ -190,11 +190,17 @@ fn main() {
             let total = todos.len();
             let completed = todos.iter().filter(|todo| todo.completed).count();
             let pending = total - completed;
+            let completion = if total == 0 {
+                0.0
+            } else {
+                (completed as f64 / total as f64) * 100.0
+            };
             println!("Todo Statistics");
             println!("---------------");
             println!("Total:      {total}");
             println!("Completed:  {completed}");
             println!("Pending:    {pending}");
+            println!("Completion: {completion:.1}%");
         }
         "clear" => {
             print!("Are you sure you want to clear all your todo list? (y/N)");
