@@ -12,6 +12,20 @@ struct Todo {
     title: String,
     completed: bool,
 }
+#[derive(Debug)]
+enum TodoError {
+    IoError(std::io::Error),
+    JsonError(serde_json::Error),
+}
+
+impl std::fmt::Display for TodoError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TodoError::IoError(error) => write!(f, "IO error: {}", error),
+            TodoError::JsonError(error) => write!(f, "JSON error: {}", error),
+        }
+    }
+}
 
 fn get_data_path() -> PathBuf {
     if let Some(xdg_home) = std::env::var_os("XDG_DATA_HOME") {
@@ -28,15 +42,15 @@ fn get_data_path() -> PathBuf {
         .join("todos.json")
 }
 
-fn load_todos() -> Vec<Todo> {
+fn load_todos() -> Result<Vec<Todo>,TodoError> {
     match fs::read_to_string(get_data_path()) {
-        Ok(content) => serde_json::from_str::<Vec<Todo>>(&content).unwrap(),
+        Ok(content) => serde_json::from_str::<Vec<Todo>>(&content).map_err(TodoError::JsonError),
         Err(error) => {
             if error.kind() == ErrorKind::NotFound {
                 println!("No file found, starting with an emty list...");
-                Vec::new()
+                Ok(Vec::new())
             } else {
-                panic!("Failed to load todo files: {error}");
+                Err(TodoError::IoError(error))
             }
         }
     }
@@ -54,7 +68,13 @@ fn save_todos(todos: &[Todo]) {
 fn main() {
     let mut input = String::new();
     let args: Vec<String> = args().collect();
-    let mut todos = load_todos();
+    let mut todos = match load_todos() {
+        Ok(todos) => todos,
+        Err(error) => {
+            eprintln!("Failed to load todos: {error}");
+            std::process::exit(1);
+        }
+    };
     if args.len() < 2 {
         println!("Usage: todo <command>");
         println!("Try \"todo help\" for more information.");
@@ -141,28 +161,7 @@ fn main() {
                 }
             }
         }
-        "remove" => {
-            if args.len() < 3 {
-                println!("expected todo id, found nothing");
-                return;
-            }
-            let id: u64 = match args[2].parse() {
-                Ok(id) => id,
-                Err(_) => {
-                    println!("Invalid todo id");
-                    return;
-                }
-            };
-            let len_bf = todos.len();
-            todos.retain(|todo| todo.id != id);
-            if len_bf == todos.len() {
-                println!("Todo not found");
-                return;
-            }
-            save_todos(&todos);
-            println!("Todo removed");
-        }
-        "rm" => {
+        "remove" | "rm" => {
             if args.len() < 3 {
                 println!("expected todo id, found nothing");
                 return;
