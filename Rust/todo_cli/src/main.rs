@@ -42,7 +42,7 @@ fn get_data_path() -> PathBuf {
         .join("todos.json")
 }
 
-fn load_todos() -> Result<Vec<Todo>,TodoError> {
+fn load_todos() -> Result<Vec<Todo>, TodoError> {
     match fs::read_to_string(get_data_path()) {
         Ok(content) => serde_json::from_str::<Vec<Todo>>(&content).map_err(TodoError::JsonError),
         Err(error) => {
