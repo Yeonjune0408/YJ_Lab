@@ -171,6 +171,29 @@ fn main() {
                 }
             }
         }
+        "pending" => {
+            if args.len() < 3 {
+                println!("expected todo id, found nothing");
+                return;
+            }
+            let id: u64 = match args[2].parse() {
+                Ok(id) => id,
+                Err(_) => {
+                    println!("No id found, please provide a valid todo id");
+                    return;
+                }
+            };
+            match todos.iter_mut().find(|todo| todo.id == id) {
+                Some(todo) => {
+                    todo.status=TodoStatus::Pending;
+                    save_todos(&todos);
+                    println!("Todo marked as pending");
+                }
+                None => {
+                    println!("Todo not found")
+                }
+            }
+        }
         "remove" | "rm" => {
             if args.len() < 3 {
                 println!("expected todo id, found nothing");
