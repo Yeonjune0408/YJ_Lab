@@ -5,7 +5,7 @@ use std::io;
 use std::io::ErrorKind;
 use std::io::Write;
 use std::path::PathBuf;
-#[derive (Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 enum TodoStatus {
     Undone,
@@ -110,7 +110,7 @@ fn main() {
                     TodoStatus::Done => "[x]",
                 };
                 println!("{} {} {}", status, todo.id, todo.title);
-        }
+            }
         }
         "help" => {
             println!("Usage: todo <command> [arguments]");
@@ -139,7 +139,7 @@ fn main() {
             };
             match todos.iter_mut().find(|todo| todo.id == id) {
                 Some(todo) => {
-                    todo.status=TodoStatus::Done;
+                    todo.status = TodoStatus::Done;
                     save_todos(&todos);
                     println!("Todo marked as done");
                 }
@@ -162,7 +162,7 @@ fn main() {
             };
             match todos.iter_mut().find(|todo| todo.id == id) {
                 Some(todo) => {
-                    todo.status=TodoStatus::Undone;
+                    todo.status = TodoStatus::Undone;
                     save_todos(&todos);
                     println!("Todo marked as undone");
                 }
@@ -185,7 +185,7 @@ fn main() {
             };
             match todos.iter_mut().find(|todo| todo.id == id) {
                 Some(todo) => {
-                    todo.status=TodoStatus::Pending;
+                    todo.status = TodoStatus::Pending;
                     save_todos(&todos);
                     println!("Todo marked as pending");
                 }
@@ -241,7 +241,10 @@ fn main() {
         }
         "stats" => {
             let total = todos.len();
-            let completed = todos.iter().filter(|todo| matches! (todo.status, TodoStatus::Done)).count();
+            let completed = todos
+                .iter()
+                .filter(|todo| matches!(todo.status, TodoStatus::Done))
+                .count();
             let pending = total - completed;
             let completion = if total == 0 {
                 0.0
