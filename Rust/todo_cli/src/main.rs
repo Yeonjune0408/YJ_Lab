@@ -112,7 +112,7 @@ fn main() {
                 println!("{} {} {}", status, todo.id, todo.title);
             }
         }
-        "help"|"-h"|"--help" => {
+        "help" | "-h" | "--help" => {
             println!("Usage: todo <command> [arguments]");
             println!("Commands:");
             println!("  add <title>                Add a new todo");
