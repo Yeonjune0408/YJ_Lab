@@ -117,8 +117,9 @@ fn main() {
             println!("Commands:");
             println!("  add <title>                Add a new todo");
             println!("  list                       List all todos");
+            println!("  pending <id>               Mark a todo as in progress");
             println!("  done <id>                  Mark a todo as completed");
-            println!("  undone <id>                Mark a todo as not completed");
+            println!("  undone <id>                Mark a todo as not started");
             println!("  remove <id>                Remove a todo  ");
             println!("  rm <id>                    Remove a todo  ");
             println!("  edit <id> \"<new title>\"  Edit a todo title");
@@ -252,7 +253,7 @@ fn main() {
                 (completed as f64 / total as f64) * 100.0
             };
             println!("Todo Statistics");
-            println!("---------------");
+            println!("-------------------");
             println!("Total:      {total}");
             println!("Completed:  {completed}");
             println!("Pending:    {pending}");
