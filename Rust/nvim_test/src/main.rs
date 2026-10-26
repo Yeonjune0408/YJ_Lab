@@ -1,4 +1,4 @@
 fn main() {
-    let number:i32="hello";
-    println!("Hello, world!");
+    let number="hello";
+    println!("{number}");
 }
