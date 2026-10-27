@@ -246,21 +246,18 @@ fn main() {
                 .iter()
                 .filter(|todo| matches!(todo.status, TodoStatus::Done))
                 .count();
-            let pending = todos
-                .iter()
-                .filter(|todo| matches!(todo.status, TodoStatus::Undone))
-                .count();
-            let completion = if total == 0 {
+            let pending = todos.iter().filter(|todo| matches!(todo.status, TodoStatus::Pending)).count();
+            let undone=todos.iter().filter(|todo| matches!(todo.status, TodoStatus::Undone)).count();
+            let completion= if total==0 {
                 0.0
             } else {
-                (completed as f64 / total as f64) * 100.0
+                (completed as f64/total as f64)*100.0
             };
-            println!("Todo Statistics");
-            println!("-------------------");
-            println!("Total:      {total}");
-            println!("Completed:  {completed}");
-            println!("Pending:    {pending}");
-            println!("Completion: {completion:.1}%");
+            println!("Total: {}", total);
+            println!("Undone: {}", undone);
+            println!("Pending: {}", pending);
+            println!("Completed: {}", completed);
+            println!("Completion: {completion:.1}%")
         }
         "clear" => {
             print!("Are you sure you want to clear all your todo list? (y/N)");
