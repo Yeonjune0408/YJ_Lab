@@ -246,7 +246,10 @@ fn main() {
                 .iter()
                 .filter(|todo| matches!(todo.status, TodoStatus::Done))
                 .count();
-            let pending = total - completed;
+            let pending = todos
+                .iter()
+                .filter(|todo| matches!(todo.status, TodoStatus::Undone))
+                .count();
             let completion = if total == 0 {
                 0.0
             } else {
