@@ -107,7 +107,7 @@ fn main() {
                 let status = match todo.status {
                     TodoStatus::Undone => "[ ]",
                     TodoStatus::Pending => "[~]",
-                    TodoStatus::Done => "[x]",
+                    TodoStatus::Done => "[✓]",
                 };
                 println!("{} {} {}", status, todo.id, todo.title);
             }
