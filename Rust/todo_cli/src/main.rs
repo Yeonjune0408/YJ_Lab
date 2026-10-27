@@ -5,12 +5,18 @@ use std::io;
 use std::io::ErrorKind;
 use std::io::Write;
 use std::path::PathBuf;
-
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+enum TodoStatus {
+    Undone,
+    Pending,
+    Done,
+}
 #[derive(Serialize, Deserialize, Debug)]
 struct Todo {
     id: u64,
     title: String,
-    completed: bool,
+    status: TodoStatus,
 }
 #[derive(Debug)]
 enum TodoError {
@@ -91,24 +97,29 @@ fn main() {
             let todo_new = Todo {
                 id: next_id,
                 title,
-                completed: false,
+                status: TodoStatus::Undone,
             };
             todos.push(todo_new);
             save_todos(&todos);
         }
         "list" => {
             for todo in todos.iter() {
-                let status = if todo.completed { "[✓]" } else { "[ ]" };
-                println!("{} {}  {}", status, todo.id, todo.title);
+                let status = match todo.status {
+                    TodoStatus::Undone => "[ ]",
+                    TodoStatus::Pending => "[~]",
+                    TodoStatus::Done => "[x]",
+                };
+                println!("{} {} {}", status, todo.id, todo.title);
             }
         }
-        "help" => {
+        "help" | "-h" | "--help" => {
             println!("Usage: todo <command> [arguments]");
             println!("Commands:");
             println!("  add <title>                Add a new todo");
             println!("  list                       List all todos");
+            println!("  pending <id>               Mark a todo as in progress");
             println!("  done <id>                  Mark a todo as completed");
-            println!("  undone <id>                Mark a todo as not completed");
+            println!("  undone <id>                Mark a todo as not started");
             println!("  remove <id>                Remove a todo  ");
             println!("  rm <id>                    Remove a todo  ");
             println!("  edit <id> \"<new title>\"  Edit a todo title");
@@ -129,7 +140,7 @@ fn main() {
             };
             match todos.iter_mut().find(|todo| todo.id == id) {
                 Some(todo) => {
-                    todo.completed = true;
+                    todo.status = TodoStatus::Done;
                     save_todos(&todos);
                     println!("Todo marked as done");
                 }
@@ -152,9 +163,32 @@ fn main() {
             };
             match todos.iter_mut().find(|todo| todo.id == id) {
                 Some(todo) => {
-                    todo.completed = false;
+                    todo.status = TodoStatus::Undone;
                     save_todos(&todos);
                     println!("Todo marked as undone");
+                }
+                None => {
+                    println!("Todo not found")
+                }
+            }
+        }
+        "pending" => {
+            if args.len() < 3 {
+                println!("expected todo id, found nothing");
+                return;
+            }
+            let id: u64 = match args[2].parse() {
+                Ok(id) => id,
+                Err(_) => {
+                    println!("No id found, please provide a valid todo id");
+                    return;
+                }
+            };
+            match todos.iter_mut().find(|todo| todo.id == id) {
+                Some(todo) => {
+                    todo.status = TodoStatus::Pending;
+                    save_todos(&todos);
+                    println!("Todo marked as pending");
                 }
                 None => {
                     println!("Todo not found")
@@ -208,7 +242,10 @@ fn main() {
         }
         "stats" => {
             let total = todos.len();
-            let completed = todos.iter().filter(|todo| todo.completed).count();
+            let completed = todos
+                .iter()
+                .filter(|todo| matches!(todo.status, TodoStatus::Done))
+                .count();
             let pending = total - completed;
             let completion = if total == 0 {
                 0.0
@@ -216,7 +253,7 @@ fn main() {
                 (completed as f64 / total as f64) * 100.0
             };
             println!("Todo Statistics");
-            println!("---------------");
+            println!("-------------------");
             println!("Total:      {total}");
             println!("Completed:  {completed}");
             println!("Pending:    {pending}");
