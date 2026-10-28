@@ -2,11 +2,11 @@ use serde::{Deserialize, Serialize};
 use std::env::args;
 use std::fs;
 use std::io;
-use std::io::ErrorKind;
-use std::io::Write;
+use std::io::{ErrorKind, Write};
 use std::path::PathBuf;
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
+#[derive(PartialEq, Eq, PartialOrd, Ord)]
 enum TodoStatus {
     Undone,
     Pending,
@@ -53,7 +53,7 @@ fn load_todos() -> Result<Vec<Todo>, TodoError> {
         Ok(content) => serde_json::from_str::<Vec<Todo>>(&content).map_err(TodoError::JsonError),
         Err(error) => {
             if error.kind() == ErrorKind::NotFound {
-                println!("No file found, starting with an emty list...");
+                println!("No file found, starting with an empty list...");
                 Ok(Vec::new())
             } else {
                 Err(TodoError::IoError(error))
@@ -123,7 +123,10 @@ fn main() {
             println!("  remove <id>                Remove a todo  ");
             println!("  rm <id>                    Remove a todo  ");
             println!("  edit <id> \"<new title>\"  Edit a todo title");
+            println!("  stats                      Show todo statistics");
             println!("  clear                      Clear all todos (Confirmation required)");
+            println!("  reindex                     Reassign todo IDs sequentially");
+            println!("  sort <id/title/status>     Sort todos by id, title, or status");
             println!("  help                       Show this help message");
         }
         "done" => {
@@ -246,18 +249,58 @@ fn main() {
                 .iter()
                 .filter(|todo| matches!(todo.status, TodoStatus::Done))
                 .count();
-            let pending = todos.iter().filter(|todo| matches!(todo.status, TodoStatus::Pending)).count();
-            let undone=todos.iter().filter(|todo| matches!(todo.status, TodoStatus::Undone)).count();
-            let completion= if total==0 {
+            let pending = todos
+                .iter()
+                .filter(|todo| matches!(todo.status, TodoStatus::Pending))
+                .count();
+            let undone = todos
+                .iter()
+                .filter(|todo| matches!(todo.status, TodoStatus::Undone))
+                .count();
+            let completion = if total == 0 {
                 0.0
             } else {
-                (completed as f64/total as f64)*100.0
+                (completed as f64 / total as f64) * 100.0
             };
             println!("Total: {}", total);
             println!("Undone: {}", undone);
             println!("Pending: {}", pending);
             println!("Completed: {}", completed);
             println!("Completion: {completion:.1}%")
+        }
+        "reindex" => {
+            for (i, todo) in todos.iter_mut().enumerate() {
+                todo.id = (i + 1) as u64;
+            }
+            save_todos(&todos);
+            println!("Todo IDs reassigned successfully");
+        }
+        "sort" =>{
+            if args.len() < 3 {
+                println!("usage: todo sort <id/title>");
+                println!("status can be undone, pending, or done");
+                return;
+            }
+            match args[2].as_str() {
+                "id" => {
+                    todos.sort_by_key(|todo| todo.id);
+                    save_todos(&todos);
+                    println!("Todos sorted by id");
+                }
+                "title" => {
+                    todos.sort_by_key(|todo| todo.title.clone());
+                    save_todos(&todos);
+                    println!("Todos sorted by title");
+                }
+                "status"=> {
+                    todos.sort_by_key(|todo| todo.status);
+                    save_todos(&todos);
+                    println!("Todos sorted by status");
+                }
+                _ => {
+                    println!("Invalid sort key, use 'id', 'title', or 'status'");
+                }
+            }
         }
         "clear" => {
             print!("Are you sure you want to clear all your todo list? (y/N)");
@@ -266,7 +309,7 @@ fn main() {
             if input.trim().to_lowercase().eq("y") {
                 todos.clear();
                 save_todos(&todos);
-                println!("All todo list cleared");
+                println!("All todos cleared");
             } else {
                 println!("Clear cancelled");
             }
