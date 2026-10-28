@@ -125,7 +125,7 @@ fn main() {
             println!("  edit <id> \"<new title>\"  Edit a todo title");
             println!("  stats                      Show todo statistics");
             println!("  clear                      Clear all todos (Confirmation required)");
-            println!("  reindex                     Reassign todo IDs sequentially");
+            println!("  reindex                    Reassign todo IDs sequentially");
             println!("  sort <id/title/status>     Sort todos by id, title, or status");
             println!("  help                       Show this help message");
         }
@@ -277,8 +277,7 @@ fn main() {
         }
         "sort" =>{
             if args.len() < 3 {
-                println!("usage: todo sort <id/title>");
-                println!("status can be undone, pending, or done");
+                println!("Usage: todo sort <id|title|status>");
                 return;
             }
             match args[2].as_str() {
