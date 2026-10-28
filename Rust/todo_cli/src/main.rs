@@ -287,7 +287,7 @@ fn main() {
                     println!("Todos sorted by id");
                 }
                 "title" => {
-                    todos.sort_by_key(|todo| todo.title.clone());
+                    todos.sort_by(|a, b| a.title.to_lowercase().cmp(&b.title.to_lowercase()));
                     save_todos(&todos);
                     println!("Todos sorted by title");
                 }
