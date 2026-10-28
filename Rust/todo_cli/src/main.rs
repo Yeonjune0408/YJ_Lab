@@ -275,7 +275,7 @@ fn main() {
             save_todos(&todos);
             println!("Todo IDs reassigned successfully");
         }
-        "sort" =>{
+        "sort" => {
             if args.len() < 3 {
                 println!("Usage: todo sort <id|title|status>");
                 return;
@@ -287,11 +287,11 @@ fn main() {
                     println!("Todos sorted by id");
                 }
                 "title" => {
-                    todos.sort_by(|a, b| a.title.to_lowercase().cmp(&b.title.to_lowercase()));
+                    todos.sort_by_cached_key(|todo| todo.title.to_lowercase());
                     save_todos(&todos);
                     println!("Todos sorted by title");
                 }
-                "status"=> {
+                "status" => {
                     todos.sort_by_key(|todo| todo.status);
                     save_todos(&todos);
                     println!("Todos sorted by status");
