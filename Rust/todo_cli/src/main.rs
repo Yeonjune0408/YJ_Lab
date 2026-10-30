@@ -338,15 +338,16 @@ fn main() {
                     exit(2);
                 }
             };
+            if new_id == old_id {
+                eprintln!("New id is the same as the old id");
+                exit(2);
+            }
             if todos.iter().any(|todo| todo.id == new_id) {
                 eprintln!("That id already exists");
                 exit(1);
             }
             if new_id == 0 {
                 eprintln!("Todo id cannot be 0");
-                exit(2);
-            } else if new_id == old_id {
-                eprintln!("New id is the same as the old id");
                 exit(2);
             }
             match todos.iter_mut().find(|todo| todo.id == old_id) {
