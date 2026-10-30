@@ -78,7 +78,7 @@ fn main() {
         Ok(todos) => todos,
         Err(error) => {
             eprintln!("Failed to load todos: {error}");
-            exit(2);
+            exit(1);
         }
     };
     if args.len() < 2 {
@@ -149,7 +149,8 @@ fn main() {
                     println!("Todo marked as done");
                 }
                 None => {
-                    println!("Todo not found")
+                    println!("Todo not found");
+                    exit(1);
                 }
             }
         }
@@ -172,7 +173,8 @@ fn main() {
                     println!("Todo marked as undone");
                 }
                 None => {
-                    println!("Todo not found")
+                    println!("Todo not found");
+                    exit(1);
                 }
             }
         }
@@ -195,7 +197,8 @@ fn main() {
                     println!("Todo marked as pending");
                 }
                 None => {
-                    println!("Todo not found")
+                    println!("Todo not found");
+                    exit(1);
                 }
             }
         }
@@ -240,7 +243,8 @@ fn main() {
                     println!("Todo title updated");
                 }
                 None => {
-                    println!("Todo not found")
+                    println!("Todo not found");
+                    exit(1);
                 }
             }
         }
@@ -299,6 +303,7 @@ fn main() {
                 }
                 _ => {
                     println!("Invalid sort key, use 'id', 'title', or 'status'");
+                    exit(2);
                 }
             }
         }
@@ -333,6 +338,7 @@ fn main() {
                 }
                 None => {
                     println!("Todo with id {} not found", old_id);
+                    exit(1);
                 }
             };
         }
@@ -350,6 +356,7 @@ fn main() {
         }
         _ => {
             println!("Invalid command");
+            exit(2);
         }
     }
 }
