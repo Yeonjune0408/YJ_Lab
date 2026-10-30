@@ -82,14 +82,14 @@ fn main() {
         }
     };
     if args.len() < 2 {
-        println!("Usage: todo <command>");
-        println!("Try \"todo help\" for more information.");
+        eprintln!("Usage: todo <command>");
+        eprintln!("Try \"todo help\" for more information.");
         exit(2);
     }
     match args[1].as_str() {
         "add" => {
             if args.len() < 3 {
-                println!("Expected todo title, found nothing");
+                eprintln!("Expected todo title, found nothing");
                 exit(2);
             }
             let title = args[2].clone();
@@ -144,13 +144,13 @@ fn main() {
         }
         "done" => {
             if args.len() < 3 {
-                println!("expected todo id, found nothing");
+                eprintln!("expected todo id, found nothing");
                 exit(2);
             }
             let id: u64 = match args[2].parse() {
                 Ok(id) => id,
                 Err(_) => {
-                    println!("expected todo id, found nothing");
+                    eprintln!("expected todo id, found nothing");
                     exit(2);
                 }
             };
@@ -161,20 +161,20 @@ fn main() {
                     println!("Todo marked as done");
                 }
                 None => {
-                    println!("Todo not found");
+                    eprintln!("Todo not found");
                     exit(1);
                 }
             }
         }
         "undone" => {
             if args.len() < 3 {
-                println!("expected todo id, found nothing");
+                eprintln!("expected todo id, found nothing");
                 exit(2);
             }
             let id: u64 = match args[2].parse() {
                 Ok(id) => id,
                 Err(_) => {
-                    println!("expected todo id, found nothing");
+                    eprintln!("expected todo id, found nothing");
                     exit(2);
                 }
             };
@@ -185,20 +185,20 @@ fn main() {
                     println!("Todo marked as undone");
                 }
                 None => {
-                    println!("Todo not found");
+                    eprintln!("Todo not found");
                     exit(1);
                 }
             }
         }
         "pending" => {
             if args.len() < 3 {
-                println!("expected todo id, found nothing");
+                eprintln!("expected todo id, found nothing");
                 exit(2);
             }
             let id: u64 = match args[2].parse() {
                 Ok(id) => id,
                 Err(_) => {
-                    println!("No id found, please provide a valid todo id");
+                    eprintln!("No id found, please provide a valid todo id");
                     exit(2);
                 }
             };
@@ -209,27 +209,27 @@ fn main() {
                     println!("Todo marked as pending");
                 }
                 None => {
-                    println!("Todo not found");
+                    eprintln!("Todo not found");
                     exit(1);
                 }
             }
         }
         "remove" | "rm" => {
             if args.len() < 3 {
-                println!("expected todo id, found nothing");
+                eprintln!("expected todo id, found nothing");
                 exit(2);
             }
             let id: u64 = match args[2].parse() {
                 Ok(id) => id,
                 Err(_) => {
-                    println!("Invalid todo id");
+                    eprintln!("Invalid todo id");
                     exit(2);
                 }
             };
             let len_bf = todos.len();
             todos.retain(|todo| todo.id != id);
             if len_bf == todos.len() {
-                println!("Todo not found");
+                eprintln!("Todo not found");
                 exit(1);
             }
             save_todos(&todos);
@@ -237,13 +237,13 @@ fn main() {
         }
         "edit" => {
             if args.len() < 4 {
-                println!("usage: todo edit <id> <new title>");
+                eprintln!("usage: todo edit <id> <new title>");
                 exit(2);
             }
             let id: u64 = match args[2].parse() {
                 Ok(id) => id,
                 Err(_) => {
-                    println!("Invalid todo id");
+                    eprintln!("Invalid todo id");
                     exit(2);
                 }
             };
@@ -255,7 +255,7 @@ fn main() {
                     println!("Todo title updated");
                 }
                 None => {
-                    println!("Todo not found");
+                    eprintln!("Todo not found");
                     exit(1);
                 }
             }
@@ -294,7 +294,7 @@ fn main() {
         }
         "sort" => {
             if args.len() < 3 {
-                println!("Usage: todo sort <id|title|status>");
+                eprintln!("Usage: todo sort <id|title|status>");
                 exit(2);
             }
             match args[2].as_str() {
@@ -314,7 +314,7 @@ fn main() {
                     println!("Todos sorted by status");
                 }
                 _ => {
-                    println!("Invalid sort key, use 'id', 'title', or 'status'");
+                    eprintln!("Invalid sort key, use 'id', 'title', or 'status'");
                     exit(2);
                 }
             }
@@ -345,7 +345,7 @@ fn main() {
             if new_id == 0 {
                 eprintln!("Todo id cannot be 0");
                 exit(2);
-            } else if new_id==old_id {
+            } else if new_id == old_id {
                 eprintln!("New id is the same as the old id");
                 exit(2);
             }
@@ -356,7 +356,7 @@ fn main() {
                     println!("Todo id updated from {} to {}", old_id, new_id);
                 }
                 None => {
-                    println!("Todo with id {} not found", old_id);
+                    eprintln!("Todo with id {} not found", old_id);
                     exit(1);
                 }
             };
@@ -374,7 +374,7 @@ fn main() {
             }
         }
         _ => {
-            println!("Invalid command");
+            eprintln!("Invalid command");
             exit(2);
         }
     }
