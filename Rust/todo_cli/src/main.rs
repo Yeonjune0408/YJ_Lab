@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 use std::env::args;
-use std::{fs, process::exit};
 use std::io;
 use std::io::{ErrorKind, Write};
 use std::path::PathBuf;
+use std::{fs, process::exit};
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 #[derive(PartialEq, Eq, PartialOrd, Ord)]
@@ -93,7 +93,19 @@ fn main() {
                 exit(2);
             }
             let title = args[2].clone();
-            let next_id = todos.iter().map(|todo| todo.id).max().unwrap_or(0) + 1;
+            let max_id = todos.iter().map(|todo| todo.id).max().unwrap_or(0);
+            let next_id = match max_id.checked_add(1) {
+                Some(id) => id,
+                None => {
+                    eprintln!(
+                        "Cannot add a todo: the maximum ID has been reached. Please remove some todos or reindex them."
+                    );
+                    eprintln!(
+                        "By the way why do you need so many todos? You should probably... reconsider your ambitions."
+                    );
+                    exit(1);
+                }
+            };
             let todo_new = Todo {
                 id: next_id,
                 title,
@@ -157,7 +169,7 @@ fn main() {
         "undone" => {
             if args.len() < 3 {
                 println!("expected todo id, found nothing");
-                exit(2);   
+                exit(2);
             }
             let id: u64 = match args[2].parse() {
                 Ok(id) => id,
@@ -309,26 +321,33 @@ fn main() {
         }
         "set-id" => {
             if args.len() < 4 {
-                println!("Usage: todo set-id <old_id> <new_id>");
+                eprintln!("Usage: todo set-id <old_id> <new_id>");
                 exit(2);
             }
             let old_id: u64 = match args[2].parse() {
                 Ok(id) => id,
                 Err(_) => {
-                    println!("Invalid old todo id");
+                    eprintln!("Invalid old todo id");
                     exit(2);
                 }
             };
             let new_id: u64 = match args[3].parse() {
                 Ok(id) => id,
                 Err(_) => {
-                    println!("Invalid new todo id");
+                    eprintln!("Invalid new todo id");
                     exit(2);
                 }
             };
             if todos.iter().any(|todo| todo.id == new_id) {
-                println!("That id already exists");
+                eprintln!("That id already exists");
                 exit(1);
+            }
+            if new_id == 0 {
+                eprintln!("Todo id cannot be 0");
+                exit(2);
+            } else if new_id==old_id {
+                eprintln!("New id is the same as the old id");
+                exit(2);
             }
             match todos.iter_mut().find(|todo| todo.id == old_id) {
                 Some(todo) => {
