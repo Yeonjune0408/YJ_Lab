@@ -126,6 +126,7 @@ fn main() {
             println!("  stats                      Show todo statistics");
             println!("  clear                      Clear all todos (Confirmation required)");
             println!("  reindex                    Reassign todo IDs sequentially");
+            println!("  set-id <old_id> <new_id>   Change a todo's ID");
             println!("  sort <id/title/status>     Sort todos by id, title, or status");
             println!("  help                       Show this help message");
         }
@@ -300,6 +301,40 @@ fn main() {
                     println!("Invalid sort key, use 'id', 'title', or 'status'");
                 }
             }
+        }
+        "set-id" => {
+            if args.len() < 4 {
+                println!("Usage: todo set-id <old_id> <new_id>");
+                return;
+            }
+            let old_id: u64 = match args[2].parse() {
+                Ok(id) => id,
+                Err(_) => {
+                    println!("Invalid old todo id");
+                    return;
+                }
+            };
+            let new_id: u64 = match args[3].parse() {
+                Ok(id) => id,
+                Err(_) => {
+                    println!("Invalid new todo id");
+                    return;
+                }
+            };
+            if todos.iter().any(|todo| todo.id == new_id) {
+                println!("That id already exists");
+                return;
+            }
+            match todos.iter_mut().find(|todo| todo.id == old_id) {
+                Some(todo) => {
+                    todo.id = new_id;
+                    save_todos(&todos);
+                    println!("Todo id updated from {} to {}", old_id, new_id);
+                }
+                None => {
+                    println!("Todo with id {} not found", old_id);
+                }
+            };
         }
         "clear" => {
             print!("Are you sure you want to clear all your todo list? (y/N)");
