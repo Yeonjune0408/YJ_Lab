@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 use std::env::args;
-use std::fs;
 use std::io;
 use std::io::{ErrorKind, Write};
 use std::path::PathBuf;
+use std::{fs, process::exit};
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 #[derive(PartialEq, Eq, PartialOrd, Ord)]
@@ -78,22 +78,34 @@ fn main() {
         Ok(todos) => todos,
         Err(error) => {
             eprintln!("Failed to load todos: {error}");
-            std::process::exit(1);
+            exit(1);
         }
     };
     if args.len() < 2 {
-        println!("Usage: todo <command>");
-        println!("Try \"todo help\" for more information.");
-        return;
+        eprintln!("Usage: todo <command>");
+        eprintln!("Try \"todo help\" for more information.");
+        exit(2);
     }
     match args[1].as_str() {
         "add" => {
             if args.len() < 3 {
-                println!("Expected todo title, found nothing");
-                return;
+                eprintln!("Expected todo title, found nothing");
+                exit(2);
             }
             let title = args[2].clone();
-            let next_id = todos.iter().map(|todo| todo.id).max().unwrap_or(0) + 1;
+            let max_id = todos.iter().map(|todo| todo.id).max().unwrap_or(0);
+            let next_id = match max_id.checked_add(1) {
+                Some(id) => id,
+                None => {
+                    eprintln!(
+                        "Cannot add a todo: the maximum ID has been reached. Please remove some todos or reindex them."
+                    );
+                    eprintln!(
+                        "By the way why do you need so many todos? You should probably... reconsider your ambitions."
+                    );
+                    exit(1);
+                }
+            };
             let todo_new = Todo {
                 id: next_id,
                 title,
@@ -126,19 +138,20 @@ fn main() {
             println!("  stats                      Show todo statistics");
             println!("  clear                      Clear all todos (Confirmation required)");
             println!("  reindex                    Reassign todo IDs sequentially");
+            println!("  set-id <old_id> <new_id>   Change a todo's ID");
             println!("  sort <id/title/status>     Sort todos by id, title, or status");
             println!("  help                       Show this help message");
         }
         "done" => {
             if args.len() < 3 {
-                println!("expected todo id, found nothing");
-                return;
+                eprintln!("expected todo id, found nothing");
+                exit(2);
             }
             let id: u64 = match args[2].parse() {
                 Ok(id) => id,
                 Err(_) => {
-                    println!("expected todo id, found nothing");
-                    return;
+                    eprintln!("expected todo id, found nothing");
+                    exit(2);
                 }
             };
             match todos.iter_mut().find(|todo| todo.id == id) {
@@ -148,20 +161,21 @@ fn main() {
                     println!("Todo marked as done");
                 }
                 None => {
-                    println!("Todo not found")
+                    eprintln!("Todo not found");
+                    exit(1);
                 }
             }
         }
         "undone" => {
             if args.len() < 3 {
-                println!("expected todo id, found nothing");
-                return;
+                eprintln!("expected todo id, found nothing");
+                exit(2);
             }
             let id: u64 = match args[2].parse() {
                 Ok(id) => id,
                 Err(_) => {
-                    println!("expected todo id, found nothing");
-                    return;
+                    eprintln!("expected todo id, found nothing");
+                    exit(2);
                 }
             };
             match todos.iter_mut().find(|todo| todo.id == id) {
@@ -171,20 +185,21 @@ fn main() {
                     println!("Todo marked as undone");
                 }
                 None => {
-                    println!("Todo not found")
+                    eprintln!("Todo not found");
+                    exit(1);
                 }
             }
         }
         "pending" => {
             if args.len() < 3 {
-                println!("expected todo id, found nothing");
-                return;
+                eprintln!("expected todo id, found nothing");
+                exit(2);
             }
             let id: u64 = match args[2].parse() {
                 Ok(id) => id,
                 Err(_) => {
-                    println!("No id found, please provide a valid todo id");
-                    return;
+                    eprintln!("No id found, please provide a valid todo id");
+                    exit(2);
                 }
             };
             match todos.iter_mut().find(|todo| todo.id == id) {
@@ -194,41 +209,42 @@ fn main() {
                     println!("Todo marked as pending");
                 }
                 None => {
-                    println!("Todo not found")
+                    eprintln!("Todo not found");
+                    exit(1);
                 }
             }
         }
         "remove" | "rm" => {
             if args.len() < 3 {
-                println!("expected todo id, found nothing");
-                return;
+                eprintln!("expected todo id, found nothing");
+                exit(2);
             }
             let id: u64 = match args[2].parse() {
                 Ok(id) => id,
                 Err(_) => {
-                    println!("Invalid todo id");
-                    return;
+                    eprintln!("Invalid todo id");
+                    exit(2);
                 }
             };
             let len_bf = todos.len();
             todos.retain(|todo| todo.id != id);
             if len_bf == todos.len() {
-                println!("Todo not found");
-                return;
+                eprintln!("Todo not found");
+                exit(1);
             }
             save_todos(&todos);
             println!("Todo removed");
         }
         "edit" => {
             if args.len() < 4 {
-                println!("usage: todo edit <id> <new title>");
-                return;
+                eprintln!("usage: todo edit <id> <new title>");
+                exit(2);
             }
             let id: u64 = match args[2].parse() {
                 Ok(id) => id,
                 Err(_) => {
-                    println!("Invalid todo id");
-                    return;
+                    eprintln!("Invalid todo id");
+                    exit(2);
                 }
             };
             let title_new = args[3].clone();
@@ -239,7 +255,8 @@ fn main() {
                     println!("Todo title updated");
                 }
                 None => {
-                    println!("Todo not found")
+                    eprintln!("Todo not found");
+                    exit(1);
                 }
             }
         }
@@ -277,8 +294,8 @@ fn main() {
         }
         "sort" => {
             if args.len() < 3 {
-                println!("Usage: todo sort <id|title|status>");
-                return;
+                eprintln!("Usage: todo sort <id|title|status>");
+                exit(2);
             }
             match args[2].as_str() {
                 "id" => {
@@ -297,9 +314,53 @@ fn main() {
                     println!("Todos sorted by status");
                 }
                 _ => {
-                    println!("Invalid sort key, use 'id', 'title', or 'status'");
+                    eprintln!("Invalid sort key, use 'id', 'title', or 'status'");
+                    exit(2);
                 }
             }
+        }
+        "set-id" => {
+            if args.len() < 4 {
+                eprintln!("Usage: todo set-id <old_id> <new_id>");
+                exit(2);
+            }
+            let old_id: u64 = match args[2].parse() {
+                Ok(id) => id,
+                Err(_) => {
+                    eprintln!("Invalid old todo id");
+                    exit(2);
+                }
+            };
+            let new_id: u64 = match args[3].parse() {
+                Ok(id) => id,
+                Err(_) => {
+                    eprintln!("Invalid new todo id");
+                    exit(2);
+                }
+            };
+            if new_id == old_id {
+                eprintln!("New id is the same as the old id");
+                exit(2);
+            }
+            if todos.iter().any(|todo| todo.id == new_id) {
+                eprintln!("That id already exists");
+                exit(1);
+            }
+            if new_id == 0 {
+                eprintln!("Todo id cannot be 0");
+                exit(2);
+            }
+            match todos.iter_mut().find(|todo| todo.id == old_id) {
+                Some(todo) => {
+                    todo.id = new_id;
+                    save_todos(&todos);
+                    println!("Todo id updated from {} to {}", old_id, new_id);
+                }
+                None => {
+                    eprintln!("Todo with id {} not found", old_id);
+                    exit(1);
+                }
+            };
         }
         "clear" => {
             print!("Are you sure you want to clear all your todo list? (y/N)");
@@ -314,7 +375,8 @@ fn main() {
             }
         }
         _ => {
-            println!("Invalid command");
+            eprintln!("Invalid command");
+            exit(2);
         }
     }
 }
