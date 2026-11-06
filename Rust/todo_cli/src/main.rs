@@ -95,6 +95,17 @@ fn save_todos(todos: &[Todo]) {
 }
 
 fn main() {
+    let conn = match rusqlite::Connection::open("todos.db") {
+        Ok(conn) => conn,
+        Err(error) => {
+            eprintln!("Failed to open database: {}", error);
+            exit(1);
+        }
+    };
+    if let Err(error) = db::init_db(&conn) {
+        eprintln!("Failed to initialize database: {}", error);
+        exit(1);
+    }
     let mut input = String::new();
     let args: Vec<String> = args().collect();
     let mut todos = match load_todos() {
