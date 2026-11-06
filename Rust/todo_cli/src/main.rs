@@ -20,7 +20,7 @@ struct Todo {
 }
 #[derive(Debug)]
 enum TodoError {
-    IoError(std::io::Error),
+    IoError(io::Error),
     JsonError(serde_json::Error),
 }
 

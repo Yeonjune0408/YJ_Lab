@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="EMPTY_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/Rust/avg/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/avg_gui/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/calc_tau/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/calc_temp/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/fibonacci/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/ifactor/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/led_calc/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/led_calc_incurr/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/nvim_test/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/py_input/examples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/py_input/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/py_input_test/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/sincostan/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/testit/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/tests/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/todo_cli/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/updown_game/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/yutnori/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/yutnori_lib/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/Rust/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
