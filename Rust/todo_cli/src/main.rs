@@ -135,6 +135,9 @@ fn main() {
             todos.push(todo_new);
             save_todos(&todos);
         }
+        "--version"|"-V"|"version" => {
+            println!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
+        }
         "list" => {
             for todo in todos.iter() {
                 let status = match todo.status {
