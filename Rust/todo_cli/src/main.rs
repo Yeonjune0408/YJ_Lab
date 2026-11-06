@@ -127,7 +127,7 @@ fn main() {
                 exit(2);
             }
             let title = args[2..].join(" ");
-            if let Err(error)=db::add_todo(&conn, &title) {
+            if let Err(error) = db::add_todo(&conn, &title) {
                 eprintln!("Failed to add todo to database: {}", error);
                 exit(1);
             }
@@ -144,6 +144,18 @@ fn main() {
                     exit(1);
                 }
             };
+            if todos.is_empty() {
+                println!("No todos found");
+            } else {
+                for todo in &todos {
+                    let status_symbol = match todo.status {
+                        TodoStatus::Undone => "[ ]",
+                        TodoStatus::Pending => "[~]",
+                        TodoStatus::Done => "[✓]",
+                    };
+                    println!("{} {}: {}", status_symbol, todo.id, todo.title);
+                }
+            }
         }
         "help" | "-h" | "--help" => {
             println!("Usage: todo <command> [arguments]");
