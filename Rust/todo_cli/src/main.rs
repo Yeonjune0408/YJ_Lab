@@ -40,7 +40,13 @@ fn get_data_path() -> PathBuf {
             return path.join("todo_cli").join("todos.json");
         }
     }
-    let home = std::env::var_os("HOME").expect("HOME environment variable is not set");
+    let home = match std::env::var_os("HOME") {
+        Some(home) => home,
+        None => {
+            eprintln!("Could not determine home directory. Perhaps you're not in Linux or macOS?");
+            exit(1);
+        }
+    };
     PathBuf::from(home)
         .join(".local")
         .join("share")
@@ -65,10 +71,25 @@ fn load_todos() -> Result<Vec<Todo>, TodoError> {
 fn save_todos(todos: &[Todo]) {
     let path = get_data_path();
     if let Some(parent) = path.parent() {
-        fs::create_dir_all(parent).expect("Failed to create directory");
+        match fs::create_dir_all(parent) {
+            Ok(_) => {}
+            Err(error) => {
+                eprintln!("Failed to create directory: {}", error);
+                exit(1);
+            }
+        }
     }
-    let json = serde_json::to_string_pretty(todos).unwrap();
-    fs::write(path, json).expect("Failed to write todo file");
+    let json = match serde_json::to_string_pretty(todos) {
+        Ok(json) => json,
+        Err(error) => {
+            eprintln!("Failed to serialize todos: {}", error);
+            exit(1);
+        }
+    };
+    if let Err(error) = fs::write(&path, json) {
+        eprintln!("Failed to write todos to file: {}", error);
+        exit(1);
+    }
 }
 
 fn main() {
@@ -364,8 +385,14 @@ fn main() {
         }
         "clear" => {
             print!("Are you sure you want to clear all your todo list? (y/N)");
-            io::stdout().flush().unwrap();
-            io::stdin().read_line(&mut input).unwrap();
+            if let Err(error) = io::stdout().flush() {
+                eprintln!("Failed to flush stdout: {}", error);
+                exit(1);
+            }
+            if let Err(error) = io::stdin().read_line(&mut input) {
+                eprintln!("Failed to read input: {}", error);
+                exit(1);
+            }
             if input.trim().to_lowercase().eq("y") {
                 todos.clear();
                 save_todos(&todos);
