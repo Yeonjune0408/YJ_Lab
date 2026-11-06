@@ -135,7 +135,7 @@ fn main() {
             todos.push(todo_new);
             save_todos(&todos);
         }
-        "--version"|"-V"|"version" => {
+        "--version" | "-V" | "version" => {
             println!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
         }
         "list" => {
@@ -164,6 +164,7 @@ fn main() {
             println!("  reindex                    Reassign todo IDs sequentially");
             println!("  set-id <old_id> <new_id>   Change a todo's ID");
             println!("  sort <id/title/status>     Sort todos by id, title, or status");
+            println!("  -V, --version              Show version information");
             println!("  help                       Show this help message");
         }
         "done" => {
