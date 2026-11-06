@@ -126,40 +126,24 @@ fn main() {
                 eprintln!("Expected todo title, found nothing");
                 exit(2);
             }
-            let title = args[2].clone();
-            let max_id = todos.iter().map(|todo| todo.id).max().unwrap_or(0);
-            let next_id = match max_id.checked_add(1) {
-                Some(id) => id,
-                None => {
-                    eprintln!(
-                        "Cannot add a todo: the maximum ID has been reached. Please remove some todos or reindex them."
-                    );
-                    eprintln!(
-                        "By the way why do you need so many todos? You should probably... reconsider your ambitions."
-                    );
-                    exit(1);
-                }
-            };
-            let todo_new = Todo {
-                id: next_id,
-                title,
-                status: TodoStatus::Undone,
-            };
-            todos.push(todo_new);
-            save_todos(&todos);
+            let title = args[2..].join(" ");
+            if let Err(error)=db::add_todo(&conn, &title) {
+                eprintln!("Failed to add todo to database: {}", error);
+                exit(1);
+            }
+            println!("Todo added successfully");
         }
         "--version" | "-V" | "version" => {
             println!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
         }
         "list" => {
-            for todo in todos.iter() {
-                let status = match todo.status {
-                    TodoStatus::Undone => "[ ]",
-                    TodoStatus::Pending => "[~]",
-                    TodoStatus::Done => "[✓]",
-                };
-                println!("{} {} {}", status, todo.id, todo.title);
-            }
+            let todos = match db::list_todos(&conn) {
+                Ok(todos) => todos,
+                Err(error) => {
+                    eprintln!("Failed to list todos from database: {}", error);
+                    exit(1);
+                }
+            };
         }
         "help" | "-h" | "--help" => {
             println!("Usage: todo <command> [arguments]");
