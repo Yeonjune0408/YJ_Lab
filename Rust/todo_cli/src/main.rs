@@ -1,3 +1,5 @@
+mod db;
+
 use serde::{Deserialize, Serialize};
 use std::env::args;
 use std::io;
