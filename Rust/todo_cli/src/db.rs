@@ -54,3 +54,22 @@ pub fn list_todos(conn: &Connection) -> Result<Vec<Todo>> {
 
     todo_iter.collect()
 }
+
+pub fn set_status(
+    conn: &Connection,
+    id: u64,
+    status: TodoStatus
+) -> Result<bool> {
+    let status_str = match status {
+        TodoStatus::Undone => "undone",
+        TodoStatus::Pending => "pending",
+        TodoStatus::Done => "done",
+    };
+
+    let rows_updated = conn.execute(
+        "UPDATE todos SET status = ?1 WHERE id = ?2",
+        rusqlite::params![status_str, id as i64],
+    )?;
+
+    Ok(rows_updated > 0)
+}

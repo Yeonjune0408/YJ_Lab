@@ -34,7 +34,19 @@ impl std::fmt::Display for TodoError {
         }
     }
 }
-
+fn parse_todo_id (arg: &str) -> Result<u64, String> {
+    match arg.parse::<u64>() {
+        Ok(id) if id>0 && id <= i64::MAX as u64 => Ok(id),
+        Ok(_) => {
+            eprintln!("Invalid todo id: {}, out of SQLite Integer range. ", arg);
+            exit(2);
+        }
+        Err(error) => {
+            eprintln!("Invalid todo ID '{arg}':{error}");
+            exit(2);
+        }
+    }
+}
 fn get_data_path() -> PathBuf {
     if let Some(xdg_home) = std::env::var_os("XDG_DATA_HOME") {
         let path = PathBuf::from(xdg_home);
@@ -181,21 +193,29 @@ fn main() {
                 eprintln!("expected todo id, found nothing");
                 exit(2);
             }
-            let id: u64 = match args[2].parse() {
-                Ok(id) => id,
-                Err(_) => {
+            let id_arg=match args.get(2) {
+                Some(value) => value,
+                None => {
                     eprintln!("expected todo id, found nothing");
                     exit(2);
                 }
             };
-            match todos.iter_mut().find(|todo| todo.id == id) {
-                Some(todo) => {
-                    todo.status = TodoStatus::Done;
-                    save_todos(&todos);
-                    println!("Todo marked as done");
+            let id = parse_todo_id(id_arg);
+            let id_unwrapped = match id {
+                Ok(id) => id,
+                Err(error) => {
+                    eprintln!("Invalid todo ID: {}", error);
+                    exit(2);
                 }
-                None => {
-                    eprintln!("Todo not found");
+            };
+            match db::set_status (&conn, id_unwrapped, TodoStatus::Done) {
+                Ok(true) => println!("Todo marked as done"),
+                Ok(false) => {
+                    eprintln!("Invalid Todo ID");
+                    exit(1);
+                }
+                Err(error) => {
+                    eprintln!("Failed to update todo status: {}", error);
                     exit(1);
                 }
             }
