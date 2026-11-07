@@ -69,3 +69,8 @@ pub fn set_status(conn: &Connection, id: u64, status: TodoStatus) -> Result<bool
 
     Ok(rows_updated > 0)
 }
+
+pub fn remove_todo(conn: &Connection, id: u64) -> Result<bool> {
+    let rows_deleted = conn.execute("DELETE FROM todos WHERE id = ?1", [id as i64])?;
+    Ok(rows_deleted > 0)
+}
