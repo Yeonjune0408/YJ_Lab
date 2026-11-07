@@ -105,3 +105,62 @@ fn test_todo_id_validation() {
         assert_eq!(output.status.code(), Some(2));
     }
 }
+
+#[test]
+fn test_edit_todo() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+
+    assert_success(&run_cli(dir, &["add", "Original title"]));
+    assert_success(&run_cli(dir, &["done", "1"]));
+    assert_success(&run_cli(dir, &["edit", "1", "Updated", "title"]));
+
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(stdout.contains("[✓] 1: Updated title"));
+    assert!(!stdout.contains("Original title"));
+
+    let output = run_cli(dir, &["edit", "99999", "Missing todo"]);
+    assert_eq!(output.status.code(), Some(1));
+
+    for args in [
+        vec!["edit"],
+        vec!["edit", "1"],
+        vec!["edit", "abc", "New title"],
+    ] {
+        let output = run_cli(dir, &args);
+        assert_eq!(output.status.code(), Some(2));
+    }
+}
+
+#[test]
+fn test_blank_titles_are_rejected() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+
+    for title in ["", "   ", "\t\n", "\u{2003}"] {
+        let output = run_cli(dir, &["add", title]);
+        assert_eq!(output.status.code(), Some(2));
+        assert!(String::from_utf8_lossy(&output.stderr)
+            .contains("Todo title cannot be blank"));
+    }
+
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    assert!(String::from_utf8_lossy(&output.stdout).contains("No todos found"));
+
+    assert_success(&run_cli(dir, &["add", "Original title"]));
+
+    for title in ["", "   ", "\t\n", "\u{2003}"] {
+        let output = run_cli(dir, &["edit", "1", title]);
+        assert_eq!(output.status.code(), Some(2));
+        assert!(String::from_utf8_lossy(&output.stderr)
+            .contains("Todo title cannot be blank"));
+    }
+
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    assert!(String::from_utf8_lossy(&output.stdout)
+        .contains("[ ] 1: Original title"));
+}

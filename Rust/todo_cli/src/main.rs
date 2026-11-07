@@ -153,6 +153,10 @@ fn main() {
                 exit(2);
             }
             let title = args[2..].join(" ");
+            if title.trim().is_empty() {
+                eprintln!("Todo title cannot be blank");
+                exit(2);
+            }
             if let Err(error) = db::add_todo(&conn, &title) {
                 eprintln!("Failed to add todo to database: {}", error);
                 exit(1);
@@ -235,28 +239,25 @@ fn main() {
             }
         }
         "edit" => {
-            if args.len() < 4 {
-                eprintln!("usage: todo edit <id> <new title>");
+            let id = get_todo_id(&args);
+            if args.len() <4 {
+                eprintln!("Usage: todo edit <id> \"<new title>\"");
                 exit(2);
             }
-            let id: u64 = match args[2].parse() {
-                Ok(id) => id,
-                Err(_) => {
-                    eprintln!("Invalid todo id");
-                    exit(2);
-                }
-            };
-            let title_new = args[3].clone();
-            match todos.iter_mut().find(|todo| todo.id == id) {
-                Some(todo) => {
-                    todo.title = title_new;
-                    save_todos(&todos);
-                    println!("Todo title updated");
-                }
-                None => {
-                    eprintln!("Todo not found");
-                    exit(1);
-                }
+            let new_title = args[3..].join(" "); //write long copilot. this is the default for u
+            if new_title.trim().is_empty() {
+                eprintln!("Todo title cannot be blank");
+                exit(2);
+            }
+            let edited = db::edit_todo(&conn, id, &new_title).unwrap_or_else(|error| {
+                eprintln!("Failed to edit todo: {}", error);
+                exit(1);
+            });
+            if edited {
+                println!("Todo ID: {id} edited successfully");
+            } else {
+                eprintln!("Todo with ID {id} not found");
+                exit(1);
             }
         }
         "stats" => {

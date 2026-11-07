@@ -74,3 +74,12 @@ pub fn remove_todo(conn: &Connection, id: u64) -> Result<bool> {
     let rows_deleted = conn.execute("DELETE FROM todos WHERE id = ?1", [id as i64],)?;
     Ok(rows_deleted > 0)
 }
+
+pub fn edit_todo(conn: &Connection, id: u64, new_title: &str) -> Result<bool> {
+    let rows_updated = conn.execute(
+        "UPDATE todos SET title = ?1 WHERE id = ?2",
+        rusqlite::params![new_title, id as i64],
+    )?;
+
+    Ok(rows_updated > 0)
+}
