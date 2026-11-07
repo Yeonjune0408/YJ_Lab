@@ -188,12 +188,8 @@ fn main() {
             println!("  -V, --version              Show version information");
             println!("  help                       Show this help message");
         }
-        "done" => {
-            if args.len() < 3 {
-                eprintln!("expected todo id, found nothing");
-                exit(2);
-            }
-            let id_arg=match args.get(2) {
+        "done" | "pending"|"undone"=> {
+            let id_arg = match args.get(2) {
                 Some(value) => value,
                 None => {
                     eprintln!("expected todo id, found nothing");
@@ -201,71 +197,29 @@ fn main() {
                 }
             };
             let id = parse_todo_id(id_arg);
-            let id_unwrapped = match id {
+            let id = match id {
                 Ok(id) => id,
                 Err(error) => {
                     eprintln!("Invalid todo ID: {}", error);
                     exit(2);
                 }
             };
-            match db::set_status (&conn, id_unwrapped, TodoStatus::Done) {
-                Ok(true) => println!("Todo marked as done"),
-                Ok(false) => {
-                    eprintln!("Invalid Todo ID");
-                    exit(1);
-                }
-                Err(error) => {
+            let status = match args[1].as_str() {
+                "done" => TodoStatus::Done,
+                "pending" => TodoStatus::Pending,
+                "undone" => TodoStatus::Undone,
+                _ => unreachable!(),
+            };
+            let updated = db::set_status(&conn, id, status)
+                .unwrap_or_else(|error| {
                     eprintln!("Failed to update todo status: {}", error);
                     exit(1);
-                }
-            }
-        }
-        "undone" => {
-            if args.len() < 3 {
-                eprintln!("expected todo id, found nothing");
-                exit(2);
-            }
-            let id: u64 = match args[2].parse() {
-                Ok(id) => id,
-                Err(_) => {
-                    eprintln!("expected todo id, found nothing");
-                    exit(2);
-                }
-            };
-            match todos.iter_mut().find(|todo| todo.id == id) {
-                Some(todo) => {
-                    todo.status = TodoStatus::Undone;
-                    save_todos(&todos);
-                    println!("Todo marked as undone");
-                }
-                None => {
-                    eprintln!("Todo not found");
-                    exit(1);
-                }
-            }
-        }
-        "pending" => {
-            if args.len() < 3 {
-                eprintln!("expected todo id, found nothing");
-                exit(2);
-            }
-            let id: u64 = match args[2].parse() {
-                Ok(id) => id,
-                Err(_) => {
-                    eprintln!("No id found, please provide a valid todo id");
-                    exit(2);
-                }
-            };
-            match todos.iter_mut().find(|todo| todo.id == id) {
-                Some(todo) => {
-                    todo.status = TodoStatus::Pending;
-                    save_todos(&todos);
-                    println!("Todo marked as pending");
-                }
-                None => {
-                    eprintln!("Todo not found");
-                    exit(1);
-                }
+                });
+            if updated {
+                println!("Todo status updated successfully");
+            } else {
+                eprintln!("Todo with ID {id} not found");
+                exit(1);
             }
         }
         "remove" | "rm" => {
