@@ -154,7 +154,7 @@ fn main() {
             }
             let title = args[2..].join(" ");
             if title.trim().is_empty() {
-                eprintln!("Todo title cannot be blank");
+                eprintln!("Todo title cannot be blank. Why do you even need a todo with no title?");
                 exit(2);
             }
             if let Err(error) = db::add_todo(&conn, &title) {
@@ -246,8 +246,8 @@ fn main() {
             }
             let new_title = args[3..].join(" "); //write long copilot. this is the default for u
             if new_title.trim().is_empty() {
-                eprintln!("Todo title cannot be blank");
-                exit(2);
+                eprintln!("Todo title cannot be blank. Why do you even need a todo with no title?");
+                exit(2);    
             }
             let edited = db::edit_todo(&conn, id, &new_title).unwrap_or_else(|error| {
                 eprintln!("Failed to edit todo: {}", error);
