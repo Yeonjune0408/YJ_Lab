@@ -21,6 +21,7 @@
       <sourceFolder url="file://$MODULE_DIR$/Rust/updown_game/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Rust/yutnori/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Rust/yutnori_lib/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Rust/factorial/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/Rust/target" />
     </content>
     <orderEntry type="inheritedJdk" />
