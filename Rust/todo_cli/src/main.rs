@@ -37,16 +37,30 @@ impl std::fmt::Display for TodoError {
 fn parse_todo_id(arg: &str) -> Result<u64, String> {
     match arg.parse::<u64>() {
         Ok(id) if id > 0 && id <= i64::MAX as u64 => Ok(id),
-        Ok(_) => {
-            eprintln!("Invalid todo id: {}, out of SQLite Integer range. ", arg);
+        Ok(_) => Err(format!(
+            "'{arg}' must be between 1 and {}",
+            i64::MAX
+        )),
+        Err(error) => Err(format!("'{arg}': {error}")),
+    }
+}
+fn get_todo_id(args: &[String]) -> u64 {
+    let id_arg = match args.get(2) {
+        Some(value) => value,
+        None => {
+            eprintln!("expected todo id, found nothing");
             exit(2);
         }
+    };
+    match parse_todo_id(id_arg) {
+        Ok(id) => id,
         Err(error) => {
-            eprintln!("Invalid todo ID '{arg}':{error}");
+            eprintln!("Invalid todo ID: {}", error);
             exit(2);
         }
     }
 }
+
 fn get_data_path() -> PathBuf {
     if let Some(xdg_home) = std::env::var_os("XDG_DATA_HOME") {
         let path = PathBuf::from(xdg_home);
@@ -189,21 +203,7 @@ fn main() {
             println!("  help                       Show this help message");
         }
         "done" | "pending" | "undone" => {
-            let id_arg = match args.get(2) {
-                Some(value) => value,
-                None => {
-                    eprintln!("expected todo id, found nothing");
-                    exit(2);
-                }
-            };
-            let id = parse_todo_id(id_arg);
-            let id = match id {
-                Ok(id) => id,
-                Err(error) => {
-                    eprintln!("Invalid todo ID: {}", error);
-                    exit(2);
-                }
-            };
+            let id = get_todo_id(&args);
             let status = match args[1].as_str() {
                 "done" => TodoStatus::Done,
                 "pending" => TodoStatus::Pending,
@@ -222,25 +222,17 @@ fn main() {
             }
         }
         "remove" | "rm" => {
-            if args.len() < 3 {
-                eprintln!("expected todo id, found nothing");
-                exit(2);
-            }
-            let id: u64 = match args[2].parse() {
-                Ok(id) => id,
-                Err(_) => {
-                    eprintln!("Invalid todo id");
-                    exit(2);
-                }
-            };
-            let len_bf = todos.len();
-            todos.retain(|todo| todo.id != id);
-            if len_bf == todos.len() {
-                eprintln!("Todo not found");
+            let id = get_todo_id(&args);
+            let removed = db::remove_todo(&conn, id).unwrap_or_else(|error| {
+                eprintln!("Failed to remove todo: {}", error);
+                exit(1);
+            });
+            if removed {
+                println!("Todo removed successfully");
+            } else {
+                eprintln!("Todo with ID {id} not found");
                 exit(1);
             }
-            save_todos(&todos);
-            println!("Todo removed");
         }
         "edit" => {
             if args.len() < 4 {
