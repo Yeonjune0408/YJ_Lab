@@ -55,11 +55,7 @@ pub fn list_todos(conn: &Connection) -> Result<Vec<Todo>> {
     todo_iter.collect()
 }
 
-pub fn set_status(
-    conn: &Connection,
-    id: u64,
-    status: TodoStatus
-) -> Result<bool> {
+pub fn set_status(conn: &Connection, id: u64, status: TodoStatus) -> Result<bool> {
     let status_str = match status {
         TodoStatus::Undone => "undone",
         TodoStatus::Pending => "pending",

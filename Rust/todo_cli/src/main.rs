@@ -34,9 +34,9 @@ impl std::fmt::Display for TodoError {
         }
     }
 }
-fn parse_todo_id (arg: &str) -> Result<u64, String> {
+fn parse_todo_id(arg: &str) -> Result<u64, String> {
     match arg.parse::<u64>() {
-        Ok(id) if id>0 && id <= i64::MAX as u64 => Ok(id),
+        Ok(id) if id > 0 && id <= i64::MAX as u64 => Ok(id),
         Ok(_) => {
             eprintln!("Invalid todo id: {}, out of SQLite Integer range. ", arg);
             exit(2);
@@ -188,7 +188,7 @@ fn main() {
             println!("  -V, --version              Show version information");
             println!("  help                       Show this help message");
         }
-        "done" | "pending"|"undone"=> {
+        "done" | "pending" | "undone" => {
             let id_arg = match args.get(2) {
                 Some(value) => value,
                 None => {
@@ -210,11 +210,10 @@ fn main() {
                 "undone" => TodoStatus::Undone,
                 _ => unreachable!(),
             };
-            let updated = db::set_status(&conn, id, status)
-                .unwrap_or_else(|error| {
-                    eprintln!("Failed to update todo status: {}", error);
-                    exit(1);
-                });
+            let updated = db::set_status(&conn, id, status).unwrap_or_else(|error| {
+                eprintln!("Failed to update todo status: {}", error);
+                exit(1);
+            });
             if updated {
                 println!("Todo status updated successfully");
             } else {
