@@ -83,3 +83,19 @@ pub fn edit_todo(conn: &Connection, id: u64, new_title: &str) -> Result<bool> {
 
     Ok(rows_updated > 0)
 }
+pub fn get_stats(conn: &Connection) -> rusqlite::Result<(i64, i64, i64, i64)> {
+    let mut stmt = conn.prepare(
+        "SELECT
+            COUNT(*) AS total,
+            COALESCE(SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END), 0) AS done,
+            COALESCE(SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END), 0) AS pending,
+            COALESCE(SUM(CASE WHEN status = 'undone' THEN 1 ELSE 0 END), 0) AS undone
+        FROM todos",
+    )?;
+
+    let stats = stmt.query_row([], |row| {
+        Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
+    })?;
+
+    Ok(stats)
+}

@@ -56,15 +56,14 @@ fn get_todo_id(args: &[String]) -> u64 {
         }
     }
 }
-
-fn get_data_path() -> PathBuf {
-    if let Some(xdg_home) = std::env::var_os("XDG_DATA_HOME") {
+fn get_data_dir() -> PathBuf {
+    if let Some(xdg_home) = env::var_os("XDG_DATA_HOME") {
         let path = PathBuf::from(xdg_home);
         if path.is_absolute() {
-            return path.join("todo_cli").join("todos.json");
+            return path.join("todo_cli");
         }
     }
-    let home = match std::env::var_os("HOME") {
+    let home = match env::var_os("HOME") {
         Some(home) => home,
         None => {
             eprintln!("Could not determine home directory. Perhaps you're not in Linux or macOS?");
@@ -75,9 +74,14 @@ fn get_data_path() -> PathBuf {
         .join(".local")
         .join("share")
         .join("todo_cli")
-        .join("todos.json")
+}
+fn get_data_path() -> PathBuf {
+    get_data_dir().join("todos.json")
 }
 
+fn db_path() -> PathBuf {
+    get_data_dir().join("todos.db")
+}
 fn load_todos() -> Result<Vec<Todo>, TodoError> {
     match fs::read_to_string(get_data_path()) {
         Ok(content) => serde_json::from_str::<Vec<Todo>>(&content).map_err(TodoError::JsonError),
@@ -91,26 +95,7 @@ fn load_todos() -> Result<Vec<Todo>, TodoError> {
         }
     }
 }
-fn db_path() -> PathBuf {
-    if let Some(xdg_home) = std::env::var_os("XDG_DATA_HOME") {
-        let path = PathBuf::from(xdg_home);
-        if path.is_absolute() {
-            return path.join("todo_cli").join("todos.db");
-        }
-    }
-    let home = match std::env::var_os("HOME") {
-        Some(home) => home,
-        None => {
-            eprintln!("Could not determine home directory. Perhaps you're not in Linux or macOS?");
-            exit(1);
-        }
-    };
-    PathBuf::from(home)
-        .join(".local")
-        .join("share")
-        .join("todo_cli")
-        .join("todos.db")
-}
+
 fn save_todos(todos: &[Todo]) {
     let path = get_data_path();
     if let Some(parent) = path.parent() {
@@ -283,19 +268,11 @@ fn main() {
             }
         }
         "stats" => {
-            let total = todos.len();
-            let completed = todos
-                .iter()
-                .filter(|todo| matches!(todo.status, TodoStatus::Done))
-                .count();
-            let pending = todos
-                .iter()
-                .filter(|todo| matches!(todo.status, TodoStatus::Pending))
-                .count();
-            let undone = todos
-                .iter()
-                .filter(|todo| matches!(todo.status, TodoStatus::Undone))
-                .count();
+            let (total, completed, pending, undone) =
+                db::get_stats(&conn).unwrap_or_else(|error| {
+                    eprintln!("Failed to get todo statistics: {error}");
+                    exit(1);
+                });
             let completion = if total == 0 {
                 0.0
             } else {
