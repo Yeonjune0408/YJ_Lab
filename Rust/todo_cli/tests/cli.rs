@@ -161,3 +161,76 @@ fn test_blank_titles_are_rejected() {
     assert_success(&output);
     assert!(String::from_utf8_lossy(&output.stdout).contains("[ ] 1: Original title"));
 }
+
+#[test]
+fn test_stats() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+
+    let output = run_cli(dir, &["stats"]);
+    assert_success(&output);
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    for line in [
+        "Total: 0",
+        "Undone: 0",
+        "Pending: 0",
+        "Completed: 0",
+        "Completion: 0.0%",
+    ] {
+        assert!(stdout.lines().any(|actual| actual == line), "{stdout}");
+    }
+
+    for title in ["First", "Second", "Third"] {
+        assert_success(&run_cli(dir, &["add", title]));
+    }
+    assert_success(&run_cli(dir, &["done", "1"]));
+    assert_success(&run_cli(dir, &["pending", "2"]));
+
+    let output = run_cli(dir, &["stats"]);
+    assert_success(&output);
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    for line in [
+        "Total: 3",
+        "Undone: 1",
+        "Pending: 1",
+        "Completed: 1",
+        "Completion: 33.3%",
+    ] {
+        assert!(stdout.lines().any(|actual| actual == line), "{stdout}");
+    }
+}
+
+#[test]
+fn test_remove_todo() {
+    for command in ["remove", "rm"] {
+        let temp = tempfile::tempdir().unwrap();
+        let dir = temp.path();
+
+        assert_success(&run_cli(dir, &["add", "Remove this"]));
+        assert_success(&run_cli(dir, &["add", "Keep this"]));
+        assert_success(&run_cli(dir, &[command, "1"]));
+
+        let output = run_cli(dir, &["list"]);
+        assert_success(&output);
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        assert!(!stdout.contains("Remove this"));
+        assert!(stdout.contains("[ ] 2: Keep this"));
+
+        // Removing the same ID again must fail.
+        let output = run_cli(dir, &[command, "1"]);
+        assert_eq!(output.status.code(), Some(1));
+
+        for id in ["abc", "0", "-1", "9223372036854775808"] {
+            let output = run_cli(dir, &[command, id]);
+            assert_eq!(output.status.code(), Some(2));
+        }
+        let output = run_cli(dir, &[command]);
+        assert_eq!(output.status.code(), Some(2));
+
+        assert_success(&run_cli(dir, &[command, "2"]));
+        let output = run_cli(dir, &["list"]);
+        assert_success(&output);
+        assert!(String::from_utf8_lossy(&output.stdout)
+            .contains("No todos found"));
+    }
+}
