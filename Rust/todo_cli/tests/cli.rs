@@ -142,8 +142,7 @@ fn test_blank_titles_are_rejected() {
     for title in ["", "   ", "\t\n", "\u{2003}"] {
         let output = run_cli(dir, &["add", title]);
         assert_eq!(output.status.code(), Some(2));
-        assert!(String::from_utf8_lossy(&output.stderr)
-            .contains("Todo title cannot be blank"));
+        assert!(String::from_utf8_lossy(&output.stderr).contains("Todo title cannot be blank"));
     }
 
     let output = run_cli(dir, &["list"]);
@@ -155,12 +154,10 @@ fn test_blank_titles_are_rejected() {
     for title in ["", "   ", "\t\n", "\u{2003}"] {
         let output = run_cli(dir, &["edit", "1", title]);
         assert_eq!(output.status.code(), Some(2));
-        assert!(String::from_utf8_lossy(&output.stderr)
-            .contains("Todo title cannot be blank"));
+        assert!(String::from_utf8_lossy(&output.stderr).contains("Todo title cannot be blank"));
     }
 
     let output = run_cli(dir, &["list"]);
     assert_success(&output);
-    assert!(String::from_utf8_lossy(&output.stdout)
-        .contains("[ ] 1: Original title"));
+    assert!(String::from_utf8_lossy(&output.stdout).contains("[ ] 1: Original title"));
 }

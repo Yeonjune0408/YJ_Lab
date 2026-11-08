@@ -2,9 +2,8 @@ mod db;
 
 use serde::{Deserialize, Serialize};
 use std::env::args;
-use std::io;
 use std::io::{ErrorKind, Write};
-use std::path::PathBuf;
+use std::{env, io, path::PathBuf};
 use std::{fs, process::exit};
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -37,10 +36,7 @@ impl std::fmt::Display for TodoError {
 fn parse_todo_id(arg: &str) -> Result<u64, String> {
     match arg.parse::<u64>() {
         Ok(id) if id > 0 && id <= i64::MAX as u64 => Ok(id),
-        Ok(_) => Err(format!(
-            "'{arg}' must be between 1 and {}",
-            i64::MAX
-        )),
+        Ok(_) => Err(format!("'{arg}' must be between 1 and {}", i64::MAX)),
         Err(error) => Err(format!("'{arg}': {error}")),
     }
 }
@@ -95,7 +91,26 @@ fn load_todos() -> Result<Vec<Todo>, TodoError> {
         }
     }
 }
-
+fn db_path() -> PathBuf {
+    if let Some(xdg_home) = std::env::var_os("XDG_DATA_HOME") {
+        let path = PathBuf::from(xdg_home);
+        if path.is_absolute() {
+            return path.join("todo_cli").join("todos.db");
+        }
+    }
+    let home = match std::env::var_os("HOME") {
+        Some(home) => home,
+        None => {
+            eprintln!("Could not determine home directory. Perhaps you're not in Linux or macOS?");
+            exit(1);
+        }
+    };
+    PathBuf::from(home)
+        .join(".local")
+        .join("share")
+        .join("todo_cli")
+        .join("todos.db")
+}
 fn save_todos(todos: &[Todo]) {
     let path = get_data_path();
     if let Some(parent) = path.parent() {
@@ -121,7 +136,14 @@ fn save_todos(todos: &[Todo]) {
 }
 
 fn main() {
-    let conn = match rusqlite::Connection::open("todos.db") {
+    let path = db_path();
+    if let Some(parent) = path.parent() {
+        if let Err(error) = fs::create_dir_all(parent) {
+            eprintln!("Failed to create database directory: {}", error);
+            exit(1);
+        }
+    }
+    let conn = match rusqlite::Connection::open(&path) {
         Ok(conn) => conn,
         Err(error) => {
             eprintln!("Failed to open database: {}", error);
@@ -240,14 +262,14 @@ fn main() {
         }
         "edit" => {
             let id = get_todo_id(&args);
-            if args.len() <4 {
+            if args.len() < 4 {
                 eprintln!("Usage: todo edit <id> \"<new title>\"");
                 exit(2);
             }
             let new_title = args[3..].join(" "); //write long copilot. this is the default for u
             if new_title.trim().is_empty() {
                 eprintln!("Todo title cannot be blank. Why do you even need a todo with no title?");
-                exit(2);    
+                exit(2);
             }
             let edited = db::edit_todo(&conn, id, &new_title).unwrap_or_else(|error| {
                 eprintln!("Failed to edit todo: {}", error);
