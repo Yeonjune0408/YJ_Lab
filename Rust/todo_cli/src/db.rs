@@ -99,3 +99,8 @@ pub fn get_stats(conn: &Connection) -> rusqlite::Result<(i64, i64, i64, i64)> {
 
     Ok(stats)
 }
+
+pub fn clear_todos(conn: &Connection) -> Result<()> {
+    conn.execute("DELETE FROM todos", [])?;
+    Ok(())
+}

@@ -371,9 +371,10 @@ fn main() {
                 exit(1);
             }
             if input.trim().to_lowercase().eq("y") {
-                todos.clear();
-                save_todos(&todos);
-                println!("All todos cleared");
+                db::clear_todos(&conn).unwrap_or_else(|error| {
+                    eprintln!("Failed to clear todos: {}", error);
+                    exit(1);
+                });
             } else {
                 println!("Clear cancelled");
             }
