@@ -128,7 +128,7 @@ fn main() {
         eprintln!("Failed to create database directory: {}", error);
         exit(1);
     }
-    let conn = match rusqlite::Connection::open(&path) {
+    let mut conn = match rusqlite::Connection::open(&path) {
         Ok(conn) => conn,
         Err(error) => {
             eprintln!("Failed to open database: {}", error);
@@ -285,10 +285,10 @@ fn main() {
             println!("Completion: {completion:.1}%")
         }
         "reindex" => {
-            for (i, todo) in todos.iter_mut().enumerate() {
-                todo.id = (i + 1) as u64;
-            }
-            save_todos(&todos);
+            db::reindex_todos(&mut conn).unwrap_or_else(|error| {
+                eprintln!("Failed to reindex todos: {error}");
+                exit(1);
+            });
             println!("Todo IDs reassigned successfully");
         }
         "sort" => {
