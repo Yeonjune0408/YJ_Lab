@@ -1,14 +1,33 @@
+use std::io::Write;
 use std::path::Path;
-use std::process::{Command, Output};
+use std::process::{Command, Output, Stdio};
 
 fn run_cli(dir: &Path, args: &[&str]) -> Output {
-    Command::new(env!("CARGO_BIN_EXE_todo"))
+    run_cli_with_input(dir, args, "")
+}
+
+fn run_cli_with_input(dir: &Path, args: &[&str], input: &str) -> Output {
+    let mut child = Command::new(env!("CARGO_BIN_EXE_todo"))
         .current_dir(dir)
         .env("XDG_DATA_HOME", dir)
         .env("HOME", dir)
         .args(args)
-        .output()
-        .expect("Failed to execute todo_cli")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("Failed to execute todo_cli");
+
+    child
+        .stdin
+        .take()
+        .expect("Failed to open stdin")
+        .write_all(input.as_bytes())
+        .expect("Failed to write CLI input");
+
+    child
+        .wait_with_output()
+        .expect("Failed to wait for todo_cli")
 }
 
 fn assert_success(output: &Output) {
@@ -135,6 +154,95 @@ fn test_edit_todo() {
 }
 
 #[test]
+fn test_edit_id_validation() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+
+    assert_success(&run_cli(dir, &["add", "Original title"]));
+
+    for id in ["0", "-1", "9223372036854775808", "18446744073709551616"] {
+        let output = run_cli(dir, &["edit", id, "New title"]);
+        assert_eq!(output.status.code(), Some(2));
+        assert!(String::from_utf8_lossy(&output.stderr).contains("Invalid todo ID"));
+    }
+
+    let output = run_cli(dir, &["edit", "9223372036854775807", "New title"]);
+    assert_eq!(output.status.code(), Some(1));
+    assert!(
+        String::from_utf8_lossy(&output.stderr)
+            .contains("Todo with ID 9223372036854775807 not found")
+    );
+
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    assert!(String::from_utf8_lossy(&output.stdout).contains("[ ] 1: Original title"));
+}
+
+#[test]
+fn test_add_requires_title() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+
+    let output = run_cli(dir, &["add"]);
+    assert_eq!(output.status.code(), Some(2));
+    assert!(String::from_utf8_lossy(&output.stderr).contains("Expected todo title"));
+
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    assert!(String::from_utf8_lossy(&output.stdout).contains("No todos found"));
+}
+
+#[test]
+fn test_clear_confirmed() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+
+    for title in ["First", "Second", "Third"] {
+        assert_success(&run_cli(dir, &["add", title]));
+    }
+    assert_success(&run_cli(dir, &["done", "1"]));
+    assert_success(&run_cli(dir, &["pending", "2"]));
+
+    assert_success(&run_cli_with_input(dir, &["clear"], "y\n"));
+
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    assert!(String::from_utf8_lossy(&output.stdout).contains("No todos found"));
+}
+
+#[test]
+fn test_clear_cancelled() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+
+    assert_success(&run_cli(dir, &["add", "Keep this"]));
+    assert_success(&run_cli(dir, &["done", "1"]));
+
+    // Explicit rejection, Enter, and end-of-input must all preserve the list.
+    for input in ["n\n", "\n", ""] {
+        let output = run_cli_with_input(dir, &["clear"], input);
+        assert_success(&output);
+        assert!(String::from_utf8_lossy(&output.stdout).contains("Clear cancelled"));
+
+        let output = run_cli(dir, &["list"]);
+        assert_success(&output);
+        assert!(String::from_utf8_lossy(&output.stdout).contains("[✓] 1: Keep this"));
+    }
+}
+
+#[test]
+fn test_clear_empty_database() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+
+    assert_success(&run_cli_with_input(dir, &["clear"], "y\n"));
+
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    assert!(String::from_utf8_lossy(&output.stdout).contains("No todos found"));
+}
+
+#[test]
 fn test_blank_titles_are_rejected() {
     let temp = tempfile::tempdir().unwrap();
     let dir = temp.path();
@@ -230,7 +338,6 @@ fn test_remove_todo() {
         assert_success(&run_cli(dir, &[command, "2"]));
         let output = run_cli(dir, &["list"]);
         assert_success(&output);
-        assert!(String::from_utf8_lossy(&output.stdout)
-            .contains("No todos found"));
+        assert!(String::from_utf8_lossy(&output.stdout).contains("No todos found"));
     }
 }

@@ -123,10 +123,11 @@ fn save_todos(todos: &[Todo]) {
 fn main() {
     let path = db_path();
     if let Some(parent) = path.parent()
-        && let Err(error) = fs::create_dir_all(parent) {
-            eprintln!("Failed to create database directory: {}", error);
-            exit(1);
-        }
+        && let Err(error) = fs::create_dir_all(parent)
+    {
+        eprintln!("Failed to create database directory: {}", error);
+        exit(1);
+    }
     let conn = match rusqlite::Connection::open(&path) {
         Ok(conn) => conn,
         Err(error) => {
