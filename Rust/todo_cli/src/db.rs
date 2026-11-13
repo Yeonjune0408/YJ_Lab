@@ -18,7 +18,10 @@ pub fn init_db(conn: &Connection) -> Result<()> {
     let has_position = {
         let mut stmt = tx.prepare("PRAGMA table_info(todos)")?;
         let columns = stmt.query_map([], |row| row.get::<_, String>(1))?;
-        columns.collect::<Result<Vec<_>>>()?.iter().any(|name| name == "position")
+        columns
+            .collect::<Result<Vec<_>>>()?
+            .iter()
+            .any(|name| name == "position")
     };
     if !has_position {
         tx.execute_batch("ALTER TABLE todos ADD COLUMN position INTEGER NOT NULL DEFAULT 0;")?;

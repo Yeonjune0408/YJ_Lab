@@ -341,3 +341,141 @@ fn test_remove_todo() {
         assert!(String::from_utf8_lossy(&output.stdout).contains("No todos found"));
     }
 }
+
+#[test]
+fn test_existing_database_position_migration() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+    std::fs::create_dir(dir.join("todo_cli")).unwrap();
+    let conn = rusqlite::Connection::open(dir.join("todo_cli/todos.db")).unwrap();
+    conn.execute_batch(
+        "CREATE TABLE todos (
+            id INTEGER PRIMARY KEY,
+            title TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'undone'
+                CHECK (status IN ('done', 'pending', 'undone'))
+        );
+        INSERT INTO todos VALUES (8, 'Later', 'done'), (2, 'Earlier', 'pending');",
+    )
+    .unwrap();
+
+    // Starting the CLI upgrades the legacy table without losing its contents.
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    assert!(String::from_utf8_lossy(&output.stdout).contains("[~] 2: Earlier\n[✓] 8: Later"));
+    let mut stmt = conn
+        .prepare("SELECT position FROM todos ORDER BY id")
+        .unwrap();
+    let positions: Vec<i64> = stmt
+        .query_map([], |row| row.get(0))
+        .unwrap()
+        .collect::<rusqlite::Result<_>>()
+        .unwrap();
+    assert_eq!(positions, vec![1, 2]);
+
+    // Later startups must not reset positions that have already been saved.
+    conn.execute("UPDATE todos SET position = 3 - position", [])
+        .unwrap();
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    assert!(String::from_utf8_lossy(&output.stdout).contains("[✓] 8: Later\n[~] 2: Earlier"));
+}
+
+#[test]
+fn test_saved_order_and_appending_after_removal() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+    for title in ["First", "Second", "Third"] {
+        assert_success(&run_cli(dir, &["add", title]));
+    }
+    let conn = rusqlite::Connection::open(dir.join("todo_cli/todos.db")).unwrap();
+    // Set up a saved order directly while the sort command is still being migrated.
+    conn.execute("UPDATE todos SET position = 4 - id", [])
+        .unwrap();
+    assert_success(&run_cli(dir, &["remove", "2"]));
+    assert_success(&run_cli(dir, &["edit", "3", "Updated third"]));
+    assert_success(&run_cli(dir, &["done", "3"]));
+    assert_success(&run_cli(dir, &["add", "Appended"]));
+
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    assert!(
+        String::from_utf8_lossy(&output.stdout)
+            .contains("[✓] 3: Updated third\n[ ] 1: First\n[ ] 4: Appended")
+    );
+    let position: i64 = conn
+        .query_row(
+            "SELECT position FROM todos WHERE title = 'Appended'",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+    assert_eq!(position, 4);
+}
+
+#[test]
+fn test_reindex_preserves_saved_order_and_status() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+    for title in ["First", "Second", "Third", "Fourth", "Fifth"] {
+        assert_success(&run_cli(dir, &["add", title]));
+    }
+    assert_success(&run_cli(dir, &["remove", "2"]));
+    assert_success(&run_cli(dir, &["remove", "4"]));
+    assert_success(&run_cli(dir, &["done", "5"]));
+    assert_success(&run_cli(dir, &["pending", "3"]));
+    let conn = rusqlite::Connection::open(dir.join("todo_cli/todos.db")).unwrap();
+    conn.execute("UPDATE todos SET position = 6 - id", [])
+        .unwrap();
+
+    for _ in 0..2 {
+        let output = run_cli(dir, &["reindex"]);
+        assert_success(&output);
+        assert!(
+            String::from_utf8_lossy(&output.stdout).contains("Todo IDs reassigned successfully")
+        );
+        let output = run_cli(dir, &["list"]);
+        assert_success(&output);
+        assert!(
+            String::from_utf8_lossy(&output.stdout)
+                .contains("[✓] 1: Fifth\n[~] 2: Third\n[ ] 3: First")
+        );
+    }
+    assert_success(&run_cli(dir, &["add", "Next"]));
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    assert!(String::from_utf8_lossy(&output.stdout).contains("[ ] 3: First\n[ ] 4: Next"));
+}
+
+#[test]
+fn test_reindex_empty_database() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+    assert_success(&run_cli(dir, &["reindex"]));
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    assert!(String::from_utf8_lossy(&output.stdout).contains("No todos found"));
+}
+
+#[test]
+fn test_reindex_rolls_back_on_failure() {
+    let temp = tempfile::tempdir().unwrap();
+    let dir = temp.path();
+    assert_success(&run_cli(dir, &["add", "First"]));
+    assert_success(&run_cli(dir, &["add", "Second"]));
+    let conn = rusqlite::Connection::open(dir.join("todo_cli/todos.db")).unwrap();
+    conn.execute_batch(
+        "UPDATE todos SET position = 3 - id;
+         CREATE TRIGGER reject_second_id BEFORE UPDATE OF id ON todos
+         WHEN NEW.id = 2
+         BEGIN SELECT RAISE(ABORT, 'Simulated reindex failure'); END;",
+    )
+    .unwrap();
+
+    let output = run_cli(dir, &["reindex"]);
+    assert_eq!(output.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&output.stderr).contains("Simulated reindex failure"));
+    let output = run_cli(dir, &["list"]);
+    assert_success(&output);
+    assert!(String::from_utf8_lossy(&output.stdout).contains("[ ] 2: Second\n[ ] 1: First"));
+}
