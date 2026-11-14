@@ -76,11 +76,17 @@ fn render(
     frame.render_widget(cpu_label, cpu_label_area);
 }
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let mut terminal = ratatui::init();
+    let result = run(&mut terminal);
+    ratatui::restore();
+    result
+}
+
+fn run(terminal: &mut ratatui::DefaultTerminal) -> Result<(), Box<dyn std::error::Error>> {
     let mut cpu_history: VecDeque<(f64, f64)> = VecDeque::new();
     let mut ram_history: VecDeque<(f64, f64)> = VecDeque::new();
     let mut sys = System::new_all()?;
     let mut tick: f64 = 0.0;
-    let mut terminal = ratatui::init();
     loop {
         thread::sleep(Duration::from_millis(250));
         sys.refresh_cpu_usage();
@@ -102,7 +108,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             && key.kind == KeyEventKind::Press
             && key.code == KeyCode::Char('q')
         {
-            ratatui::restore();
             break;
         }
     }
