@@ -8,7 +8,7 @@ use ratatui::{
 };
 use std::collections::VecDeque;
 use std::{thread, time::Duration};
-use sysinfo::{CpuRefreshKind, RefreshKind, System};
+use sysinfo::System;
 fn render(frame: &mut Frame, history: &VecDeque<(f64, f64)>, tick: f64) {
     let x_max = tick.max(60.0);
     let x_min = x_max - 60.0;
