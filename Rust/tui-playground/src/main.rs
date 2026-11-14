@@ -97,13 +97,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             ram_history.pop_front();
         }
         terminal.draw(|frame| render(frame, &cpu_history, &ram_history, tick))?;
-        if event::poll(Duration::from_millis(0))? {
-            if let Event::Key(key) = event::read()? {
-                if key.kind == KeyEventKind::Press && key.code == KeyCode::Char('q') {
-                    ratatui::restore();
-                    break;
-                }
-            }
+        if event::poll(Duration::from_millis(0))?
+            && let Event::Key(key) = event::read()?
+            && key.kind == KeyEventKind::Press
+            && key.code == KeyCode::Char('q')
+        {
+            ratatui::restore();
+            break;
         }
     }
     Ok(())
