@@ -40,12 +40,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut tick: f64 = 0.0;
     let mut terminal = ratatui::init();
     loop {
-        thread::sleep(Duration::from_secs(1));
+        thread::sleep(Duration::from_millis(250));
         sys.refresh_cpu_usage();
         let cpu_usage = sys.global_cpu_usage();
         history.push_back((tick, cpu_usage.into()));
-        tick += 1.0;
-        if history.len() > 60 {
+        tick += 0.25;
+        if history.len() > 240 {
             history.pop_front();
         }
         terminal.draw(|frame| render(frame, &history, tick))?;
@@ -58,6 +58,5 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
-    thread::sleep(Duration::from_secs(5));
     Ok(())
 }
