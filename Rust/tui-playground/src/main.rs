@@ -1,21 +1,18 @@
+use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use ratatui::{
     Frame,
     layout::{Constraint, Direction, Layout},
-    style:: {Color, Style},
-    widgets::{Axis, Block, Borders, Chart, Dataset},
+    style::{Color, Style},
     symbols,
+    widgets::{Axis, Block, Borders, Chart, Dataset},
 };
-fn render(frame: &mut Frame) {
-    let cpu_data = [
-        (0.0, 10.0),
-        (1.0, 25.0),
-        (2.0, 40.0),
-        (3.0, 30.0),
-        (4.0, 70.0),
-        (5.0, 45.0),
-        (6.0, 60.0),
-        (7.0, 35.0),
-    ];
+use std::collections::VecDeque;
+use std::{thread, time::Duration};
+use sysinfo::{CpuRefreshKind, RefreshKind, System};
+fn render(frame: &mut Frame, history: &VecDeque<(f64, f64)>, tick: f64) {
+    let x_max = tick.max(60.0);
+    let x_min = x_max - 60.0;
+    let cpu_data: Vec<(f64, f64)> = history.iter().copied().collect();
     let dataset = Dataset::default()
         .name("CPU Usage")
         .marker(symbols::Marker::Braille)
@@ -24,12 +21,12 @@ fn render(frame: &mut Frame) {
         .data(&cpu_data);
     let chart = Chart::new(vec![dataset])
         .block(Block::default().title("CPU Usage").borders(Borders::ALL))
-        .x_axis((Axis::default()
-            .bounds([0.0, 7.0]))
-            .labels(["0s", "7s"]),)
-        .y_axis(Axis::default()
-            .bounds([0.0, 100.0])
-            .labels(["0%","50%", "100%"]));
+        .x_axis(Axis::default().bounds([x_min, x_max]).labels(["0s", "7s"]))
+        .y_axis(
+            Axis::default()
+                .bounds([0.0, 100.0])
+                .labels(["0%", "50%", "100%"]),
+        );
 
     let layout = Layout::default()
         .direction(Direction::Vertical)
@@ -37,9 +34,30 @@ fn render(frame: &mut Frame) {
     let chunks = layout.split(frame.area());
     frame.render_widget(chart, chunks[0]);
 }
-fn main() -> std::io::Result<()> {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let mut history: VecDeque<(f64, f64)> = VecDeque::new();
+    let mut sys = System::new_all()?;
+    let mut tick: f64 = 0.0;
     let mut terminal = ratatui::init();
-    terminal.draw(render)?;
-    std::thread::sleep(std::time::Duration::from_secs(5));
+    loop {
+        thread::sleep(Duration::from_secs(1));
+        sys.refresh_cpu_usage();
+        let cpu_usage = sys.global_cpu_usage();
+        history.push_back((tick, cpu_usage.into()));
+        tick += 1.0;
+        if history.len() > 60 {
+            history.pop_front();
+        }
+        terminal.draw(|frame| render(frame, &history, tick))?;
+        if event::poll(Duration::from_millis(0))? {
+            if let Event::Key(key) = event::read()? {
+                if key.kind == KeyEventKind::Press && key.code == KeyCode::Char('q') {
+                    ratatui::restore();
+                    break;
+                }
+            }
+        }
+    }
+    thread::sleep(Duration::from_secs(5));
     Ok(())
 }
