@@ -10,8 +10,8 @@ WIDTH, HEIGHT = 1000, 720
 WORLD = pg.Rect(24, 92, WIDTH - 48, HEIGHT - 116)
 GREEN = (89, 239, 157)
 MAGAZINE_SIZE = 36
-STARTING_RESERVE = 72
-RESERVE_CAPACITY = 108
+STARTING_RESERVE = 36
+RESERVE_CAPACITY = 72
 RELOAD_TIME = 1.5
 STAGES = (
     {"name": "Jungle edge", "goal": 8, "trees": 14, "logs": 2,
@@ -47,10 +47,9 @@ class Game:
         self.enemies = []
         self.bombs = []
         self.fires = []
-        self.medkits = [pg.Vector2(120, 180), pg.Vector2(870, 600)]
+        self.medkits = [pg.Vector2(870, 600)]
         self.ammo_pickups = [
             {"pos": pg.Vector2(150, 600), "amount": 18},
-            {"pos": pg.Vector2(870, 180), "amount": 36},
         ]
         self.message = f"{self.stage['name']}: defeat {self.stage['goal']} enemies. Trees and logs provide cover."
         self.message_timer = 5
@@ -236,12 +235,12 @@ class Game:
                     self.enemies.remove(hit)
                     self.kills += 1
                     self.stage_kills += 1
-                    if self.stage_kills % 4 == 0:
+                    if self.stage_kills % 8 == 0:
                         self.medkits.append(hit["pos"].copy())
-                    if self.stage_kills % 3 == 0:
+                    if self.stage_kills % 5 == 0:
                         self.ammo_pickups.append({
                             "pos": hit["pos"].copy(),
-                            "amount": random.choice((18, 36)),
+                            "amount": 36 if self.stage_kills % 10 == 0 else 18,
                         })
             if hit is not None or blocked or bullet["life"] <= 0 or not WORLD.collidepoint(bullet["pos"]):
                 self.bullets.remove(bullet)
@@ -273,7 +272,7 @@ class Game:
         if self.stage_kills >= self.stage["goal"] and self.state == "playing":
             self.state = "cleared" if self.stage_index + 1 < len(STAGES) else "won"
 
-    def draw(self, screen, font, small, big):
+    def draw(self, screen, font, small, big, tiny):
         screen.fill((10, 21, 20))
         pg.draw.rect(screen, (22, 48, 33), WORLD, border_radius=12)
         for pos, radius in self.trees:
@@ -360,21 +359,27 @@ class Game:
         if self.invulnerable <= 0 or int(self.elapsed * 12) % 2 == 0:
             pg.draw.rect(screen, GREEN, self.player_rect(), border_radius=3)
             pg.draw.rect(screen, (201, 255, 217), self.player_rect(), 2, border_radius=3)
+        self.draw_player_status(screen, tiny)
         mouse = pg.Vector2(pg.mouse.get_pos())
         pg.draw.circle(screen, (190, 214, 193), mouse, 8, 1)
 
-        label(screen, font, f"STAGE {self.stage_index + 1} / {self.stage['name'].upper()}", (24, 16), GREEN)
+        stage_text = font.render(
+            f"STAGE {self.stage_index + 1} / {self.stage['name'].upper()}",
+            True, GREEN)
+        screen.blit(stage_text, stage_text.get_rect(topright=(WIDTH - 24, 16)))
         label(screen, small, "WASD / arrows: move    Hold click: shoot    R: reload    F2: restart    Esc: quit",
               (24, 53), (164, 189, 173))
-        label(screen, font, f"HP {'+ ' * max(0, self.health)}   {self.stage_kills}/{self.stage['goal']}", (690, 16), (240, 223, 177))
-        ammo_text = f"AMMO {self.ammo}/{MAGAZINE_SIZE}"
-        ammo_text += f" | RESERVE {self.reserve_ammo}/{RESERVE_CAPACITY}"
+        progress = small.render(
+            f"DEFEATED {self.stage_kills}/{self.stage['goal']}",
+            True, (240, 223, 177))
+        screen.blit(progress, progress.get_rect(topright=(WIDTH - 24, 53)))
+        stats = (
+            f"HP {self.health}/3 | AMMO {self.ammo}/{MAGAZINE_SIZE}"
+            f" | RESERVE {self.reserve_ammo}/{RESERVE_CAPACITY}")
         if self.reload_timer > 0:
-            ammo_text += f" | RELOADING {self.reload_timer:.1f}s"
-        elif self.ammo == 0:
-            ammo_text += (" | EMPTY - press R" if self.reserve_ammo
-                          else " | OUT OF AMMO - find cartridges")
-        label(screen, small, ammo_text, (24, 73), (240, 223, 177))
+            stats += f" | RELOADING {self.reload_timer:.1f}s"
+        stats_text = small.render(stats, True, (240, 223, 177))
+        screen.blit(stats_text, stats_text.get_rect(topright=(WIDTH - 24, 73)))
         if self.message_timer > 0:
             text = small.render(self.message, True, (255, 222, 154))
             screen.blit(text, text.get_rect(center=(WIDTH // 2, HEIGHT - 12)))
@@ -398,6 +403,38 @@ class Game:
             screen.blit(text, text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 24)))
 
 
+    def draw_player_status(self, screen, tiny):
+        x = round(max(WORLD.left + 32,
+                      min(WORLD.right - 32, self.player.x)))
+        y = round(self.player.y - 50)
+        if y < WORLD.top:
+            y = round(self.player.y + 18)
+
+        panel = pg.Rect(x - 30, y, 60, 34)
+        pg.draw.rect(screen, (16, 32, 25), panel, border_radius=5)
+
+        if self.reload_timer > 0:
+            bar = pg.Rect(x - 24, y + 4, 48, 8)
+            progress = max(0, min(1, 1 - self.reload_timer / RELOAD_TIME))
+            pg.draw.rect(screen, (57, 69, 58), bar, border_radius=3)
+            fill = bar.copy()
+            fill.width = round(bar.width * progress)
+            if fill.width:
+                pg.draw.rect(screen, GREEN, fill, border_radius=3)
+            pg.draw.rect(screen, (164, 189, 173), bar, 1, border_radius=3)
+        else:
+            color = (255, 164, 100) if self.ammo == 0 else (240, 223, 177)
+            text = tiny.render(
+                f"{self.ammo}/{self.reserve_ammo}", True, color)
+            screen.blit(text, text.get_rect(center=(x, y + 8)))
+
+        for i in range(3):
+            hx, hy = x + (i - 1) * 14, y + 23
+            color = (235, 87, 100) if i < self.health else (67, 57, 57)
+            pg.draw.rect(screen, color, (hx - 4, hy - 1, 8, 2))
+            pg.draw.rect(screen, color, (hx - 1, hy - 4, 2, 8))
+
+
 def label(screen, font, text, pos, color):
     screen.blit(font.render(text, True, color), pos)
 
@@ -409,6 +446,7 @@ def main():
     clock = pg.time.Clock()
     font = pg.font.Font(None, 28)
     small = pg.font.Font(None, 20)
+    tiny = pg.font.Font(None, 16)
     big = pg.font.Font(None, 64)
     game = Game()
     running = True
@@ -428,7 +466,7 @@ def main():
                 elif event.key == pg.K_F2:
                     game = Game()
         game.update(dt, pg.key.get_pressed(), pg.mouse.get_pressed()[0], pg.mouse.get_pos())
-        game.draw(screen, font, small, big)
+        game.draw(screen, font, small, big, tiny)
         pg.display.flip()
     pg.quit()
 
