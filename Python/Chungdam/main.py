@@ -9,11 +9,17 @@ import pygame as pg
 WIDTH, HEIGHT = 1000, 720
 WORLD = pg.Rect(24, 92, WIDTH - 48, HEIGHT - 116)
 GREEN = (89, 239, 157)
+MAGAZINE_SIZE = 36
+STARTING_RESERVE = 72
+RESERVE_CAPACITY = 108
+RELOAD_TIME = 1.5
 STAGES = (
     {"name": "Jungle edge", "goal": 8, "trees": 14, "logs": 2,
      "lasers": 3, "spawn_interval": 3.2, "shot_speed": 215, "shot_delay": 2.4},
     {"name": "Deep jungle", "goal": 12, "trees": 30, "logs": 5,
      "lasers": 5, "spawn_interval": 2.4, "shot_speed": 245, "shot_delay": 1.8},
+    {"name": "Jungle stronghold", "goal": 18, "trees": 40, "logs": 5,
+     "lasers": 5, "spawn_interval": 1.8, "shot_speed": 275, "shot_delay": 1.4},
 )
 
 
@@ -30,6 +36,9 @@ class Game:
         self.health = 3
         self.invulnerable = 0
         self.shot_timer = 0
+        self.ammo = MAGAZINE_SIZE
+        self.reserve_ammo = STARTING_RESERVE
+        self.reload_timer = 0
         self.spawn_timer = 2
         self.elapsed = 0
         self.state = "playing"
@@ -39,6 +48,10 @@ class Game:
         self.bombs = []
         self.fires = []
         self.medkits = [pg.Vector2(120, 180), pg.Vector2(870, 600)]
+        self.ammo_pickups = [
+            {"pos": pg.Vector2(150, 600), "amount": 18},
+            {"pos": pg.Vector2(870, 180), "amount": 36},
+        ]
         self.message = f"{self.stage['name']}: defeat {self.stage['goal']} enemies. Trees and logs provide cover."
         self.message_timer = 5
         self.lasers = []
@@ -57,6 +70,8 @@ class Game:
         # Leave room around the start, pickups, wires and the map entrances.
         reserved = [self.player_rect().inflate(100, 100)]
         reserved += [pg.Rect(p.x - 30, p.y - 30, 60, 60) for p in self.medkits]
+        reserved += [pg.Rect(p["pos"].x - 30, p["pos"].y - 30, 60, 60)
+                     for p in self.ammo_pickups]
         for laser in self.lasers:
             a, b = laser["a"], laser["b"]
             reserved.append(pg.Rect(min(a[0], b[0]) - 24, min(a[1], b[1]) - 24,
@@ -114,6 +129,11 @@ class Game:
         self.enemies.append({"pos": pos, "health": 2,
                              "shot_timer": random.uniform(1.1, self.stage["shot_delay"])})
 
+    def reload(self):
+        if (self.state == "playing" and self.ammo < MAGAZINE_SIZE
+                and self.reserve_ammo > 0 and self.reload_timer <= 0):
+            self.reload_timer = RELOAD_TIME
+
     def update(self, dt, keys, firing, mouse):
         if self.state != "playing":
             return
@@ -121,6 +141,12 @@ class Game:
         self.invulnerable -= dt
         self.shot_timer -= dt
         self.message_timer -= dt
+        if self.reload_timer > 0:
+            self.reload_timer = max(0, self.reload_timer - dt)
+            if self.reload_timer == 0:
+                rounds = min(MAGAZINE_SIZE - self.ammo, self.reserve_ammo)
+                self.ammo += rounds
+                self.reserve_ammo -= rounds
         move = pg.Vector2(int(keys[pg.K_d] or keys[pg.K_RIGHT]) -
                           int(keys[pg.K_a] or keys[pg.K_LEFT]),
                           int(keys[pg.K_s] or keys[pg.K_DOWN]) -
@@ -129,10 +155,12 @@ class Game:
             self.move_actor(self.player, move.normalize() * 210 * dt, 11)
 
         aim = pg.Vector2(mouse) - self.player
-        if firing and self.shot_timer <= 0 and aim.length_squared():
+        if (firing and self.shot_timer <= 0 and aim.length_squared()
+                and self.ammo > 0 and self.reload_timer <= 0):
             self.bullets.append({"pos": self.player.copy(),
                                  "velocity": aim.normalize() * 620, "life": 1.6})
             self.shot_timer = 0.18
+            self.ammo -= 1
 
         # Touching the beam arms a delayed bomb at the crossing point.
         rect = self.player_rect()
@@ -210,6 +238,11 @@ class Game:
                     self.stage_kills += 1
                     if self.stage_kills % 4 == 0:
                         self.medkits.append(hit["pos"].copy())
+                    if self.stage_kills % 3 == 0:
+                        self.ammo_pickups.append({
+                            "pos": hit["pos"].copy(),
+                            "amount": random.choice((18, 36)),
+                        })
             if hit is not None or blocked or bullet["life"] <= 0 or not WORLD.collidepoint(bullet["pos"]):
                 self.bullets.remove(bullet)
 
@@ -224,6 +257,14 @@ class Game:
                 self.hurt()
             if hit_player or wall_distance != float("inf") or bullet["life"] <= 0 or not WORLD.collidepoint(bullet["pos"]):
                 self.enemy_bullets.remove(bullet)
+
+        for pickup in self.ammo_pickups[:]:
+            pos = pickup["pos"]
+            if (self.reserve_ammo < RESERVE_CAPACITY
+                    and rect.colliderect(pg.Rect(pos.x - 14, pos.y - 14, 28, 28))):
+                self.reserve_ammo = min(
+                    RESERVE_CAPACITY, self.reserve_ammo + pickup["amount"])
+                self.ammo_pickups.remove(pickup)
 
         for kit in self.medkits[:]:
             if 0 < self.health < 3 and rect.colliderect(pg.Rect(kit.x - 12, kit.y - 12, 24, 24)):
@@ -282,6 +323,21 @@ class Game:
             spark = (255, 232, 125) if int(bomb["timer"] * 12) % 2 else (245, 77, 38)
             pg.draw.circle(screen, spark, pos + pg.Vector2(3, -6), 4)
 
+        for pickup in self.ammo_pickups:
+            pos = pickup["pos"]
+            large = pickup["amount"] == 36
+            width = 26 if large else 14
+            color = GREEN if large else (245, 191, 76)
+            box = pg.Rect(pos.x - width // 2, pos.y - 11, width, 22)
+            pg.draw.rect(screen, (40, 47, 33), box, border_radius=3)
+            pg.draw.rect(screen, color, box, 2, border_radius=3)
+            for offset in (-4, 4) if large else (0,):
+                pg.draw.line(screen, color,
+                             (pos.x + offset, pos.y - 6),
+                             (pos.x + offset, pos.y + 6), 3)
+            text = small.render(f"+{pickup['amount']}", True, color)
+            screen.blit(text, text.get_rect(center=(pos.x, pos.y - 22)))
+
         for kit in self.medkits:
             pg.draw.rect(screen, (232, 239, 218), (kit.x - 10, kit.y - 10, 20, 20), border_radius=4)
             pg.draw.rect(screen, (204, 59, 65), (kit.x - 2, kit.y - 7, 4, 14))
@@ -308,9 +364,17 @@ class Game:
         pg.draw.circle(screen, (190, 214, 193), mouse, 8, 1)
 
         label(screen, font, f"STAGE {self.stage_index + 1} / {self.stage['name'].upper()}", (24, 16), GREEN)
-        label(screen, small, "WASD / arrows: move    Mouse + hold click: shoot    R: restart    Esc: quit",
+        label(screen, small, "WASD / arrows: move    Hold click: shoot    R: reload    F2: restart    Esc: quit",
               (24, 53), (164, 189, 173))
         label(screen, font, f"HP {'+ ' * max(0, self.health)}   {self.stage_kills}/{self.stage['goal']}", (690, 16), (240, 223, 177))
+        ammo_text = f"AMMO {self.ammo}/{MAGAZINE_SIZE}"
+        ammo_text += f" | RESERVE {self.reserve_ammo}/{RESERVE_CAPACITY}"
+        if self.reload_timer > 0:
+            ammo_text += f" | RELOADING {self.reload_timer:.1f}s"
+        elif self.ammo == 0:
+            ammo_text += (" | EMPTY - press R" if self.reserve_ammo
+                          else " | OUT OF AMMO - find cartridges")
+        label(screen, small, ammo_text, (24, 73), (240, 223, 177))
         if self.message_timer > 0:
             text = small.render(self.message, True, (255, 222, 154))
             screen.blit(text, text.get_rect(center=(WIDTH // 2, HEIGHT - 12)))
@@ -320,13 +384,14 @@ class Game:
             screen.blit(shade, (0, 0))
             if self.state == "cleared":
                 title = "STAGE CLEAR"
-                subtitle = "Enter: deep jungle / more cover and traps / health restored"
+                next_stage = STAGES[self.stage_index + 1]["name"]
+                subtitle = f"Press Space or Enter to proceed: {next_stage}"
             elif self.state == "won":
                 title = "JUNGLE SECURED"
-                subtitle = f"Both stages cleared! {self.kills} defeats | R: play again"
+                subtitle = f"All {len(STAGES)} stages cleared! {self.kills} defeats | F2: play again"
             else:
                 title = "LOST IN THE JUNGLE"
-                subtitle = f"{self.kills} enemies defeated | R: restart from stage 1"
+                subtitle = f"{self.kills} enemies defeated | F2: restart from stage 1"
             text = big.render(title, True, (255, 135, 109) if self.state == "lost" else GREEN)
             screen.blit(text, text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 36)))
             text = font.render(subtitle, True, (215, 228, 216))
@@ -355,10 +420,13 @@ def main():
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     running = False
-                elif event.key == pg.K_r:
-                    game = Game()
-                elif event.key == pg.K_RETURN and game.state == "cleared":
+                elif (game.state == "cleared"
+                      and event.key in (pg.K_SPACE, pg.K_RETURN)):
                     game.load_stage(game.stage_index + 1)
+                elif event.key == pg.K_r:
+                    game.reload()
+                elif event.key == pg.K_F2:
+                    game = Game()
         game.update(dt, pg.key.get_pressed(), pg.mouse.get_pressed()[0], pg.mouse.get_pos())
         game.draw(screen, font, small, big)
         pg.display.flip()
