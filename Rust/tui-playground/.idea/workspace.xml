@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$PROJECT_DIR$/../Cargo.toml">
+      <package file="$PROJECT_DIR$/../avg">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../avg_gui">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../calc_tau">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../calc_temp">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../factorial">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../ifactor">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../fibonacci">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../led_calc">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../led_calc_incurr">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../nvim_test">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../py_input">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../py_input_test">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../sincostan">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../testit">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../tests">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../todo_cli">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../updown_game">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../yutnori">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/../yutnori_lib">
+        <feature name="default" enabled="true" />
+      </package>
+    </cargoProject>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f827e9d2-98af-4966-a651-b9169445e164" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:test" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="V35jsad2" />
+  </component>
+  <component name="ProjectId" id="3M6JCVoSYeq8JLJj4LRx7udP8VB" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "CidrDebugProfileConversion": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Cargo.Test Rust">
+    <configuration name="Run avg" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package avg --bin avg" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run avg_gui" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package avg_gui --bin avg_gui" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run calc_tau" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package calc_tau --bin calc_tau" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run calc_temp" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package calc_temp --bin calc_temp" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run factorial" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package factorial --bin factorial" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run fib" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package fib --bin fib" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run fibonacci" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package fibonacci --bin fibonacci" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run led_calc" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package led_calc --bin led_calc" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run led_calc_incurr" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package led_calc_incurr --bin led_calc_incurr" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run nvim_test" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package nvim_test --bin nvim_test" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run py_input_test" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package py_input_test --bin py_input_test" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run sincostan" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package sincostan --bin sincostan" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run testit" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package testit --bin testit" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run tests" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package tests --bin tests" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run todo" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package todo_cli --bin todo" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run tui-playground" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package tui-playground --bin tui-playground" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run updown_game" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package updown_game --bin updown_game" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run yutnori" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package yutnori --bin yutnori" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test Rust" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="test --workspace" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/.." />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="/usr/local/cargo/bin" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f827e9d2-98af-4966-a651-b9169445e164" name="Changes" comment="" />
+      <created>1794664956796</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1794664956796</updated>
+    </task>
+    <servers />
+  </component>
+</project>
