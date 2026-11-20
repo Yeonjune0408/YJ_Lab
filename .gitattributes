@@ -1,16 +1,18 @@
-# 1. KiCad 프로젝트 및 설계 파일 제외
-*.kicad_pro linguist-detectable=false
-*.kicad_sch linguist-detectable=false
-*.kicad_pcb linguist-detectable=false
-*.kicad_sym linguist-detectable=false
-*.kicad_mod linguist-detectable=false
-*.kicad_wks linguist-detectable=false
-*.kicad_prl linguist-detectable=false
-*.kicad_dru linguist-detectable=false
-fp-lib-table linguist-detectable=false
-sym-lib-table linguist-detectable=false
+# 1. KiCad 전체 폴더 및 관련 파일 제외
+KiCad/** linguist-vendored
+*kicad* linguist-detectable=false
+.*kicad* linguist-detectable=false
 
-# 2. JetBrains 설정(.idea 폴더 내 .xml 및 전체 .xml) 제외
-.idea/** linguist-vendored
+# 2. JetBrains 설정(.idea 폴더 및 모든 .xml, .iml) 제외
+**/.idea/** linguist-vendored
 *.xml linguist-detectable=false
+*.iml linguist-detectable=false
+
+# 3. Shell 통계의 범인 (Docker 설치 스크립트) 및 숨김 설정 파일 제외
+**/get-docker.sh linguist-vendored
+.micropico linguist-vendored
+
+# 4. Verilog 시뮬레이션 빌드 결과물 제외
+Verilog_Test/**/*_sim linguist-generated
+Verilog_Test/**/*.vcd linguist-generated
 
