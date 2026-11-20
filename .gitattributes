@@ -1,0 +1,16 @@
+# 1. KiCad 프로젝트 및 설계 파일 제외
+*.kicad_pro linguist-detectable=false
+*.kicad_sch linguist-detectable=false
+*.kicad_pcb linguist-detectable=false
+*.kicad_sym linguist-detectable=false
+*.kicad_mod linguist-detectable=false
+*.kicad_wks linguist-detectable=false
+*.kicad_prl linguist-detectable=false
+*.kicad_dru linguist-detectable=false
+fp-lib-table linguist-detectable=false
+sym-lib-table linguist-detectable=false
+
+# 2. JetBrains 설정(.idea 폴더 내 .xml 및 전체 .xml) 제외
+.idea/** linguist-vendored
+*.xml linguist-detectable=false
+
