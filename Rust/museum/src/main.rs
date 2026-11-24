@@ -105,13 +105,12 @@ fn setup_colliders_from_glb(
             }
         }
 
-        if is_collider && let Some(mesh) = meshes.get(mesh_handle) {
-            if let Some(collider) = Collider::trimesh_from_mesh(mesh) {
+        if is_collider && let Some(mesh) = meshes.get(mesh_handle)
+            && let Some(collider) = Collider::trimesh_from_mesh(mesh) {
                 commands
                     .entity(entity)
                     .insert((RigidBody::Static, collider));
             }
-        }
     }
 }
 
