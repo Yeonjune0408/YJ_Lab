@@ -4,3 +4,4 @@ todos.json
 *.db
 *.db-shm
 *.db-wal
+*.blend1
